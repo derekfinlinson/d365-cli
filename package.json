@@ -1,0 +1,42 @@
+{
+  "name": "d365-cli",
+  "version": "1.0.0",
+  "description": "Command line interface for Dynamics 365 development",
+  "bin": {
+    "d365": "./bin/d365.js"
+  },
+  "files": [
+    "bin",
+    "lib"
+  ],
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/derekfinlinson/d365-cli.git"
+  },
+  "keywords": [
+    "D365",
+    "Dynamics",
+    "365",
+    "CLI",
+    "CRM"
+  ],
+  "author": "Derek Finlinson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/derekfinlinson/d365-cli/issues"
+  },
+  "homepage": "https://github.com/derekfinlinson/d365-cli#readme",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "chalk": "^2.4.1",
+    "commander": "^2.15.1",
+    "inquirer": "^6.0.0"
+  },
+  "devDependencies": {
+    "boxen": "^1.3.0",
+    "jest": "^23.1.0"
+  }
+}

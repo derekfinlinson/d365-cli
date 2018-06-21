@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es5",
+        "lib": [
+            "es5", "dom", "es2015.promise"
+        ]
+    },
+    "compileOnSave": false,
+    "include": [
+        "src/scripts/*.ts"
+    ]
+}
