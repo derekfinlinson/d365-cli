@@ -1,6 +1,6 @@
 {
   "name": "d365-cli",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Command line interface for Dynamics 365 development",
   "bin": {
     "d365": "./bin/d365.js"
