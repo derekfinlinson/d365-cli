@@ -6,7 +6,7 @@ const program = require("commander"),
     boxen = require("boxen"),
     chalk = require("chalk");
 
-console.log(boxen(chalk.blue.bold("Dynamics 365 CLI"), { padding: 1, borderStyle: "classic"}));
+console.log(boxen(chalk.blue.bold("Dynamics 365 CLI"), { padding: 1, borderStyle: "classic", backgroundColor: "white"}));
 
 // Add empty line
 console.log();
@@ -17,18 +17,18 @@ program
 
 // Create command
 program
-    .command("create <project> [name]")
+    .command("create <project>")
     .description("Create a new project")
-    .action((project, name) => {
-        require("../lib/create")(project, name);
+    .action((project) => {
+        require("../lib/create")(project);
     });
 
 // Add command
 program
-    .command("add <type> <name>")
+    .command("add <type>")
     .description("Add a new file")
-    .action((type, name) => {
-        require("../lib/add")(type, name);
+    .action((type) => {
+        require("../lib/add")(type);
     });
 
 // Show help on unknown command
