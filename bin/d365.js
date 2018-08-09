@@ -25,10 +25,10 @@ program
 
 // Add command
 program
-    .command("add <type>")
+    .command("add <type> <name>")
     .description("Add a new file")
-    .action((type) => {
-        require("../lib/add")(type);
+    .action((type, name) => {
+        require("../lib/add")(type, name);
     });
 
 // Show help on unknown command
