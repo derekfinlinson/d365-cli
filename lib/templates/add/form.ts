@@ -1,16 +1,12 @@
 let form: <%= filename %>;
 
-export function onLoad(xrm?: Xrm.XrmStatic): void {
-    form = new <%= filename %>(xrm || Xrm);
-    form.onLoad();
+export function onLoad(executionContext: Xrm.Page.EventContext): void {
+    form = new <%= filename %>();
+    form.onLoad(executionContext);
 }
 
 class <%= filename %> {
-    constructor(xrm?: Xrm.XrmStatic) {
-        Xrm = xrm || Xrm;
-    }
-
-    onLoad(): void {
+    onLoad(executionContext: Xrm.Page.EventContext): void {
         // Define on load events
 
         // Add on change events
