@@ -10,7 +10,6 @@
     "lib"
   ],
   "scripts": {
-    "test": "jest",
     "travis-deploy-once": "travis-deploy-once",
     "semantic-release": "semantic-release"
   },
