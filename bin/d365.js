@@ -2,14 +2,7 @@
 
 "use strict";
 
-const program = require("commander"),
-    boxen = require("boxen"),
-    chalk = require("chalk");
-
-console.log(boxen(chalk.blue.bold("Dynamics 365 CLI"), { padding: 1, borderStyle: "classic", backgroundColor: "white"}));
-
-// Add empty line
-console.log();
+const program = require("commander");
 
 program
     .version(require('../package').version)
@@ -37,7 +30,7 @@ program
   .action((cmd) => {
     program.outputHelp();
     console.log();
-    console.log(chalk.red(`Unknown command ${chalk.yellow(cmd)}.`));
+    console.log(`Unknown command ${cmd}.`);
     console.log();
   });
 

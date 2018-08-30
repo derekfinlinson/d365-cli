@@ -34,8 +34,6 @@
   },
   "homepage": "https://github.com/derekfinlinson/d365-cli#readme",
   "dependencies": {
-    "boxen": "^1.3.0",
-    "chalk": "^2.4.1",
     "commander": "^2.15.1",
     "cross-spawn": "^6.0.5",
     "inquirer": "^6.0.0",
