@@ -3,12 +3,14 @@
         "sourceMap": true,
         "noImplicitAny": true,
         "module": "esnext",
-        "moduleResolution": "node",
         "target": "esnext",
-        "experimentalDecorators": true
+        "outDir": "dist"
     },
     "compileOnSave": false,
     "include": [
         "src/scripts/*.ts"
+    ],
+    "exclude": [
+        "node_modules"
     ]
 }

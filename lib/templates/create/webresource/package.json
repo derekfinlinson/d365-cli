@@ -3,28 +3,11 @@
   "name": "web-resources",
   "private": true,
   "scripts": {
-    "prod": "webpack --env=prod --progress --colors --hide-modules",
-    "dev": "webpack --env=dev --progress --colors --hide-modules",
+    "build": "webpack --env.prod --hide-modules --display-entrypoints false",
+    "dev": "webpack --env.dev --hide-modules --display-entrypoints false",
     "test": "jest"
   },
   "devDependencies": {
-  },
-  "babel": {
-    "presets": [
-      [
-          "@babel/preset-env",
-          {
-              "targets": {
-                  "browsers": [
-                      "last 2 versions",
-                      "ie >= 11"
-                  ]
-              },
-              "modules": false,
-              "useBuiltIns": "usage"
-          }
-      ]
-    ]
   },
   "jest": {
     "transform": {
