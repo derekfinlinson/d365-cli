@@ -4,6 +4,7 @@
         "noImplicitAny": true,
         "module": "esnext",
         "target": "esnext",
+        "moduleResolution": "node",
         "outDir": "dist"
     },
     "compileOnSave": false,

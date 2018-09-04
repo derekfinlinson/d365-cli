@@ -3,8 +3,11 @@
   "name": "web-resources",
   "private": true,
   "scripts": {
-    "build": "webpack --env.prod --hide-modules --display-entrypoints false",
-    "dev": "webpack --env.dev --hide-modules --display-entrypoints false",
+    "type-check": "tsc --noEmit",
+    "webpack": "webpack --env.prod --hide-modules --display-entrypoints false",
+    "webpack-dev": "webpack --env.dev --hide-modules --display-entrypoints false",
+    "build": "npm run type-check && npm run webpack",
+    "dev": "npm run type-check && npm run webpack-dev",
     "test": "jest"
   },
   "devDependencies": {
