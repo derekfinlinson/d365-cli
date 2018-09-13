@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net452</TargetFramework>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile><%= namespace %>.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+
+  <Target Name="ILRepacker" AfterTargets="Build">
+    <ItemGroup>
+        <MergeAssemblies Include="$(OutputPath)JourneyTeam.Xrm.dll" />
+        <MergeAssemblies Include="$(OutputPath)$(AssemblyName).dll" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <KeyFile>"$(ProjectDir)$(AssemblyName).snk"</KeyFile>
+      <OutputAssembly>$(OutputPath)$(AssemblyName).dll</OutputAssembly>
+      <ILRepack>$(NuGetPackageRoot)ilrepack\2.0.16\tools\ILRepack.exe</ILRepack>
+    </PropertyGroup>
+
+    <Exec Command="$(ILRepack) /parallel /keyfile:$(KeyFile) /out:&quot;$(OutputAssembly)&quot; @(MergeAssemblies->'&quot;%(FullPath)&quot;', ' ')" />
+  </Target>
+</Project>
