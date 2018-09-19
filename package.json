@@ -10,7 +10,8 @@
     "lib"
   ],
   "scripts": {
-    "semantic-release": "semantic-release"
+    "semantic-release": "semantic-release --no-ci",
+    "commit": "git-cz"
   },
   "repository": {
     "type": "git",
@@ -38,7 +39,14 @@
     "replace-in-file": "^3.4.0"
   },
   "devDependencies": {
+    "commitizen": "^2.10.1",
+    "cz-conventional-changelog": "^2.1.0",
     "jest": "^23.1.0",
-    "semantic-release": "^15.9.6"
+    "semantic-release": "^15.9.15"
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-conventional-changelog"
+    }
   }
 }
