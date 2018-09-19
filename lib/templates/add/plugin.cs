@@ -1,4 +1,4 @@
-using JourneyTeam.Xrm.Plugin;
+using Xrm;
 using System;
 
 namespace <%= namespace %>
@@ -10,7 +10,7 @@ namespace <%= namespace %>
           // Add Registered Events
         }
 
-        public override void ExecutePlugin(IExtendedPluginContext context)
+        protected override void ExecutePlugin(IExtendedPluginContext context)
         {
             // Plugin logic
         }

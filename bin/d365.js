@@ -11,7 +11,7 @@ program
 // Create command
 program
     .command("create <project>")
-    .description("Create a new project")
+    .description("Create a new project (webresource, plugin, workflow)")
     .action((project) => {
         require("../lib/create")(project);
     });
@@ -19,7 +19,7 @@ program
 // Add command
 program
     .command("add <type> <name>")
-    .description("Add a new file")
+    .description("Add a new file (css, html, script, test-script, plugin, workflow)")
     .action((type, name) => {
         require("../lib/add")(type, name);
     });
