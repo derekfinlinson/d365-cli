@@ -10,7 +10,7 @@ namespace <%= namespace %>
           // Add Registered Events
         }
 
-        protected override void ExecutePlugin(IExtendedPluginContext context)
+        public override void ExecutePlugin(IExtendedPluginContext context)
         {
             // Plugin logic
         }
