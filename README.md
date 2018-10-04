@@ -8,19 +8,26 @@ Dynamics 365 CLI for scaffolding development projects
 ## Generators
 
 * Web resource project scaffolding
+  * [Typescript](https://www.typescriptlang.org/index.html) for JavaScript files
   * [Webpack](https://webpack.js.org/) for bundling
   * [Babel](https://babeljs.io/) for polyfills and compiling ES2015+
   * Deploy from webpack emits using [node-webresource](https://github.com/derekfinlinson/node-webresource)
   * Unit tests using [xrm-mock](https://github.com/camelCaseDave/xrm-mock) and [Jest](https://jestjs.io/)
 * Plugin project scaffolding
-  * Coming soon
+  * Base plugin classes
+  * No ILMerge needed
 * Workflow project scaffolding
-  * Coming soon
+  * Workflow activity base class
+  * No ILMerge needed
 
 ## Usage
 
 ```node
 d365 create webresource
+
+d365 create plugin
+
+d365 create workflow
 
 d365 add script Account
 
@@ -29,4 +36,8 @@ d365 add test-script Account
 d365 add html index
 
 d365 add css stylesheet
+
+d365 add plugin AccountCreate
+
+d365 add workflow SomeActivity
 ```
