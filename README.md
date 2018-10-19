@@ -41,3 +41,7 @@ d365 add plugin AccountCreate
 
 d365 add workflow SomeActivity
 ```
+
+## Contributions
+
+Contributions are welcome. To commit changes, stage them then run ```npm run commit ``` to commit. This will format the commit so [semantic-release](https://semantic-release.gitbook.io/semantic-release/) can select the correct version number.

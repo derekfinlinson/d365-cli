@@ -3,7 +3,7 @@ using Microsoft.Xrm.Sdk;
 
 namespace Xrm
 {
-    public class LocalPluginContext : IExtendedPluginContext
+    public class BasePluginContext : IExtendedPluginContext
     {
         #region IPluginExecutionContext Properties
         public int Stage => PluginExecutionContext.Stage;
@@ -35,8 +35,16 @@ namespace Xrm
         public DateTime OperationCreatedOn => PluginExecutionContext.OperationCreatedOn;
         #endregion
 
+        /// <summary>
+        /// Name of the plugin the context is running against
+        /// </summary>
         public string PluginTypeName { get; }
 
+        /// <summary>
+        /// Pipeline stage for the context
+        /// </summary>
+        public PipelineStage PipelineStage => (PipelineStage)Stage;
+        
         /// <summary>
         /// Primary entity from the context as an entity reference
         /// </summary>
@@ -45,7 +53,7 @@ namespace Xrm
         /// <summary>
         /// Event the current plugin is executing for
         /// </summary>
-        public RegisteredEvent Event { get; set; }
+        public RegisteredEvent Event { get; private set; }
 
         /// <summary>
         /// IPluginExecutionContext contains information that describes the run-time environment in which the plug-in executes, 
@@ -62,7 +70,7 @@ namespace Xrm
         /// <summary>
         /// Provides logging run-time trace information for plug-ins
         /// </summary>
-        public ITracingService TracingService { get; set; }
+        public ITracingService TracingService { get; }
 
         /// <summary>
         /// Pre Image alias name
@@ -81,17 +89,32 @@ namespace Xrm
         private OrganizationRequest _request;
         private OrganizationResponse _response;
 
+        /// <summary>
+        /// <see cref="IOrganizationService"/> using the user from the plugin context
+        /// </summary>
         public IOrganizationService OrganizationService => _organizationService ?? (_organizationService = CreateOrganizationService(UserId));
 
+        /// <summary>
+        /// <see cref="IOrganizationService"/> using the SYSTEM user
+        /// </summary>
         public IOrganizationService SystemOrganizationService => _systemOrganizationService ?? (_systemOrganizationService = CreateOrganizationService(null));
 
+        /// <summary>
+        /// <see cref="IOrganizationService"/> using the initiating user from the plugin context
+        /// </summary>
         public IOrganizationService InitiatingUserOrganizationService => _initiatedOrganizationService ?? (_initiatedOrganizationService = CreateOrganizationService(InitiatingUserId));
 
+        /// <summary>
+        /// Get a <see href="OrganizationRequest" /> object for the current plugin execution
+        /// </summary>
         public OrganizationRequest GetRequest<T>() where T : OrganizationRequest, new()
         {
             return _request ?? (_request = new T { Parameters = PluginExecutionContext.InputParameters });
         }
 
+        /// <summary>
+        /// Get a <see href="OrganizationResponse" /> object for the current plugin execution
+        /// </summary>
         public OrganizationResponse GetResponse<T>() where T : OrganizationResponse, new()
         {
             return _response ?? (_response = new T { Results = PluginExecutionContext.OutputParameters });
@@ -102,7 +125,7 @@ namespace Xrm
         /// </summary>
         /// <param name="serviceProvider">IServiceProvider</param>
         /// <param name="plugin">Plugin handler</param>
-        public LocalPluginContext(IServiceProvider serviceProvider, IPluginHandler plugin)
+        public BasePluginContext(IServiceProvider serviceProvider, BasePlugin plugin)
         {
             if (serviceProvider == null)
             {
@@ -127,23 +150,49 @@ namespace Xrm
             PluginTypeName = plugin.GetType().FullName;
         }
 
+        /// <summary>
+        /// Prevent plugin from running multiple times for the same context
+        /// </summary>
+        public bool PreventDuplicatePluginExecution()
+        {
+            // Delete message can't be called twice so can ignore
+            if (Event.MessageName == "Delete")
+            {
+                return false;
+            }
+
+            var key = $"{PluginTypeName}|{MessageName}|{PipelineStage}|{PrimaryEntityId}";
+
+            // Check if key exists in shared variables
+            if (this.GetSharedVariable<bool>(key) == true)
+            {
+                return true;
+            }
+
+            // Add key to shared variables
+            SharedVariables.Add(key, true);
+
+            return false;
+        }
+
+        /// <summary>
+        /// Create an instance of <see cref="IOrganizationService"/> with provided user id
+        /// </summary>
+        /// <param name="userId">User id to use</param>
+        /// <returns>IOrganizationService</returns>
         public IOrganizationService CreateOrganizationService(Guid? userId)
         {
             return _factory.CreateOrganizationService(userId);
         }
 
         /// <summary>
-        ///     Writes a trace message to the CRM trace log.
+        /// Writes a trace message to the CRM trace log.
         /// </summary>
-        /// <param name="message">Message name to trace.</param>
-        public void Trace(string message)
+        /// <param name="format">Message format</param>
+        /// <param name="args">Message format arguments</param>
+        public void Trace(string format, params object[] args)
         {
-            if (string.IsNullOrWhiteSpace(message) || TracingService == null)
-            {
-                return;
-            }
-
-            TracingService.Trace(message);
+            TracingService.Trace(format, args);
         }
     }
 }
