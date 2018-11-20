@@ -6,7 +6,7 @@ namespace <%= namespace %>
 {
     public class <%= name %> : BasePlugin
     {
-        public override IEnumerable<RegisteredEvent> RegisterEvents()
+        public override IEnumerable<RegisteredEvent> GetRegisteredEvents()
         {
             // Add Registered Events
             var events = new List<RegisteredEvent>();
