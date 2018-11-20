@@ -9,6 +9,9 @@ function create(project) {
         case 'workflow':
             require('./workflowProject')();
             break;
+        case 'console':
+            require('./consoleProject')();
+            break;
         default:
             console.log('Unknown project type. Enter webresrouce, plugin or workflow');
             break;

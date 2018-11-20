@@ -36,7 +36,7 @@ function write(answers) {
         fs.mkdirSync(path.resolve(destinationPath, 'src'));
     }
 
-    if (!fs.exists(path.resolve(templdestinationPathatePath, 'src', 'html'))) {
+    if (!fs.exists(path.resolve(destinationPath, 'src', 'html'))) {
         fs.mkdirSync(path.resolve(destinationPath, 'src', 'html'));
     }
 
@@ -61,7 +61,7 @@ function write(answers) {
     }
 }
 
-function run (name) {
+async function run (name) {
     const answers = await prompt();
 
     answers.filename = name;

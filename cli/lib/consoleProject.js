@@ -6,7 +6,7 @@ const inquirer = require('inquirer'),
 
 async function getVersions() {
     return new Promise((resolve, reject) => {
-        https.get('https://api-v2v3search-0.nuget.org/query?q=packageid:Microsoft.CrmSdk.CoreAssemblies',
+        https.get('https://api-v2v3search-0.nuget.org/query?q=packageid:Microsoft.CrmSdk.XrmTooling.CoreAssembly',
             (response) => {
                 let body = '';
 
@@ -30,7 +30,7 @@ async function getVersions() {
 
 function prompt(versions) {
     console.log();
-    console.log('Enter plugin project configuration:');
+    console.log('Enter console project configuration:');
     console.log();
 
     const questions = [{
@@ -52,24 +52,21 @@ function prompt(versions) {
 
 function write(answers) {
     let destinationPath = process.cwd();
-    let templatePath = path.resolve(__dirname, 'templates', 'create', 'plugin');
+    let templatePath = path.resolve(__dirname, 'templates', 'create', 'console');
 
     console.log();
-    console.log('Add plugin project files');
+    console.log('Add console project files');
     console.log();
 
     // Write files
-    fs.copyFileSync(path.resolve(templatePath, 'plugin.csproj'), path.resolve(destinationPath, `${answers.namespace}.csproj`));
-    
+    fs.copyFileSync(path.resolve(templatePath, 'console.csproj'), path.resolve(destinationPath, `${answers.namespace}.csproj`));
+
     // Add namespace to csproj file
     require('replace-in-file').sync({
-        files: path.resolve(destinationPath, `${answers.namespace}.csproj`),
+        files: path.resolve(destinationPath, 'Program.cs'),
         from: /<%= namespace %>/g,
         to: answers.namespace
     });
-
-    // Write namespace to .d365rc file
-    fs.writeFileSync(path.resolve(destinationPath, '.d365rc'), JSON.stringify({ namespace: answers.namespace }));
 }
 
 function install(answers) {
@@ -77,12 +74,7 @@ function install(answers) {
     console.log();
 
     // Install nuget packages
-    spawn.sync('dotnet', ['add', 'package', 'Microsoft.CrmSdk.CoreAssemblies', '-v', answers.version], {
-        cwd: process.cwd(),
-        stdio: 'inherit'
-    });
-
-    spawn.sync('dotnet', ['add', 'package', 'JourneyTeam.Xrm', '-v', '1.3.0'], {
+    spawn.sync('dotnet', ['add', 'package', 'Microsoft.CrmSdk.XrmTooling.CoreAssembly', '-v', answers.version], {
         cwd: process.cwd(),
         stdio: 'inherit'
     });
@@ -91,18 +83,11 @@ function install(answers) {
         cwd: process.cwd(),
         stdio: 'inherit'
     });
-    
-    // Sign assembly
-    console.log();
-    console.log("Add key to sign assembly");
-
-    const keyPath = path.resolve(process.cwd(), `${answers.namespace}.snk`);
-    spawn.sync(path.resolve(__dirname, 'sn.exe'), ['-q', '-k', keyPath], { stdio: 'inherit'});
 }
 
 async function run() {
     console.log();
-    console.log('Create plugin project');
+    console.log('Create console project');
     console.log();
 
     const versions = await getVersions();
@@ -114,7 +99,7 @@ async function run() {
     install(answers);
 
     console.log();
-    console.log("Plugin project created");
+    console.log("Console project created");
     console.log();
 }
 
