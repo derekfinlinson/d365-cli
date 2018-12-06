@@ -11,7 +11,7 @@ program
 // Create command
 program
     .command("create <project>")
-    .description("Create a new project (webresource, plugin, workflow)")
+    .description("Create a new project (webresource, plugin, workflow, console)")
     .action((project) => {
         require("../lib/create")(project);
     });
