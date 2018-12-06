@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Xrm.Tooling.Connector;
 using Xrm;
 
@@ -11,11 +12,10 @@ namespace D365.Cli.Api
         
         public void Connect(string connectionString)
         {
-            
             _client = new CrmServiceClient(connectionString);
         }
 
-        public void DeployWebResource(List<WebResource> webResources)
+        public void DeployWebResources(List<WebResourceAsset> assets, List<WebResource> webResources)
         {
             // Validate client is connected
             if (_client == null || _client.IsReady)
@@ -27,8 +27,10 @@ namespace D365.Cli.Api
             // Retrieve web resources
             using (var ctx = new CrmServiceContext(_client))
             {
-                foreach (var resource in webResources)
+                foreach (var asset in assets)
                 {
+                    var webResource = webResources.FirstOrDefault(w => w.)
+                    var resource = ctx.WebResourceSet.FirstOrDefault()
                     // Create or update web resource
 
                     // Publish web resources for updates
