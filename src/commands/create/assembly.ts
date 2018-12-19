@@ -1,10 +1,37 @@
-const inquirer = require('inquirer'),
-    fs = require('fs'),
-    spawn = require('cross-spawn'),
-    path = require('path'),
-    https = require('https');
+import * as inquirer from 'inquirer';
+import * as fs from "fs";
+import * as path from "path";
+import * as https from "https";
+import * as spawn from 'cross-spawn';
 
-async function getCrmSdkVersions() {
+interface AssemblyConfig {
+    sdkVersion: string;
+    namespace: string;
+    xrmVersion?: string;
+}
+
+export default async function assembly(type: string) {
+    console.log();
+    console.log(`create ${type} project`);
+    console.log();
+
+    const xrmVersion: Promise<string> = getLatestXrmVersion();
+    const versions: string[] = await getSdkVersions();
+
+    const config: AssemblyConfig = await prompt(type, versions);
+
+    config.xrmVersion = await xrmVersion;
+
+    write(type, config);
+
+    install(config);
+
+    console.log();
+    console.log(`${type} project created`);
+    console.log();
+}
+
+function getSdkVersions(): Promise<string[]> {
     return new Promise((resolve, reject) => {
         https.get('https://api-v2v3search-0.nuget.org/query?q=packageid:Microsoft.CrmSdk.Workflow',
             (response) => {
@@ -15,7 +42,7 @@ async function getCrmSdkVersions() {
                 });
 
                 response.on('end', () => {
-                    const versions = JSON.parse(body).data[0].versions.map(v => {
+                    const versions = JSON.parse(body).data[0].versions.map((v: any) => {
                         return v.version;
                     }).reverse();
 
@@ -28,7 +55,7 @@ async function getCrmSdkVersions() {
     });
 }
 
-async function getLatestJourneyTeamXrmVersion() {
+function getLatestXrmVersion(): Promise<string> {
     return new Promise((resolve, reject) => {
         https.get('https://api-v2v3search-0.nuget.org/query?q=packageid:JourneyTeam.Xrm',
             (response) => {
@@ -39,7 +66,7 @@ async function getLatestJourneyTeamXrmVersion() {
                 });
 
                 response.on('end', () => {
-                    const versions = JSON.parse(body).data[0].versions.map(v => {
+                    const versions = JSON.parse(body).data[0].versions.map((v: any) => {
                         return v.version;
                     });
 
@@ -52,14 +79,14 @@ async function getLatestJourneyTeamXrmVersion() {
     });
 }
 
-function prompt(type, versions) {
+function prompt(type: string, versions: string[]): Promise<AssemblyConfig> {
     console.log();
     console.log(`enter ${type} project configuration:`);
     console.log();
 
     const questions = [{
             type: 'list',
-            name: 'version',
+            name: 'sdkVersion',
             message: 'select D365 SDK Version',
             choices: versions
         },
@@ -74,43 +101,40 @@ function prompt(type, versions) {
     return inquirer.prompt(questions);
 }
 
-function write(type, answers) {
+function write(type: string, config: AssemblyConfig) {
     let destinationPath = process.cwd();
-    let templatePath = path.resolve(__dirname, 'templates', 'create', 'project');
+    let templatePath = path.resolve(__dirname, 'templates', 'assembly');
 
     console.log();
     console.log(`add ${type} project files`);
     console.log();
 
     // Write files
-    fs.copyFileSync(path.resolve(templatePath, 'project.csproj'), path.resolve(destinationPath, `${answers.namespace}.csproj`));
+    let content: string = fs.readFileSync(path.resolve(templatePath, 'assembly.csproj'), 'utf8');
     
-    // Add namespace to csproj file
-    require('replace-in-file').sync({
-        files: path.resolve(destinationPath, `${answers.namespace}.csproj`),
-        from: /<%= namespace %>/g,
-        to: answers.namespace
-    });
+    content = content.replace(/<%= namespace %>/g, config.namespace);
 
+    fs.writeFileSync(path.resolve(destinationPath, `${config.namespace}.csproj`), content);
+    
     // Write namespace to .d365rc file
-    fs.writeFileSync(path.resolve(destinationPath, '.d365rc'), JSON.stringify({ namespace: answers.namespace }));
+    fs.writeFileSync(path.resolve(destinationPath, '.d365rc'), JSON.stringify({ namespace: config.namespace }));
 }
 
-function install(answers, version) {
+function install(config: AssemblyConfig) {
     console.log('install nuget packages');
     console.log();
 
     // Install nuget packages
-    spawn.sync('dotnet', ['add', 'package', 'Microsoft.CrmSdk.Workflow', '-v', answers.version, '-n'], {
+    spawn.sync('dotnet', ['add', 'package', 'Microsoft.CrmSdk.Workflow', '-v', config.sdkVersion, '-n'], {
         cwd: process.cwd(),
         stdio: 'inherit'
     });
 
-    spawn.sync('dotnet', ['add', 'package', 'JourneyTeam.Xrm', '-v', version, '-n'], {
+    spawn.sync('dotnet', ['add', 'package', 'JourneyTeam.Xrm', '-v', config.xrmVersion, '-n'], {
         cwd: process.cwd(),
         stdio: 'inherit'
     });
-    
+
     spawn.sync('dotnet', ['restore'], {
         cwd: process.cwd(),
         stdio: 'inherit'
@@ -120,29 +144,6 @@ function install(answers, version) {
     console.log();
     console.log("add key to sign assembly");
 
-    const keyPath = path.resolve(process.cwd(), `${answers.namespace}.snk`);
+    const keyPath = path.resolve(process.cwd(), `${config.namespace}.snk`);
     spawn.sync(path.resolve(__dirname, 'sn.exe'), ['-q', '-k', keyPath], { stdio: 'inherit'});
-}
-
-async function run(type) {
-    console.log();
-    console.log(`create ${type} project`);
-    console.log();
-
-    const versions = await getCrmSdkVersions();
-    const version = await getLatestJourneyTeamXrmVersion();
-
-    const answers = await prompt(type, versions);
-
-    write(type, answers);
-
-    install(answers, version);
-
-    console.log();
-    console.log(`${type} project created`);
-    console.log();
-}
-
-module.exports = (...args) => {
-    run(...args);
 }

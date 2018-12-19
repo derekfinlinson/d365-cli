@@ -9,7 +9,10 @@ namespace <%= namespace %>
         public override IEnumerable<RegisteredEvent> GetRegisteredEvents()
         {
             // Add Registered Events
-            var events = new List<RegisteredEvent>();
+            var events = new List<RegisteredEvent>
+            {
+
+            };
 
             return events;
         }

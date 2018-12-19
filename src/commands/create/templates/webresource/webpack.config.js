@@ -9,10 +9,9 @@ module.exports = function (env) {
         entry: config.entries,
 
         output: {
-            filename: 'js/[name].js',
+            filename: 'scripts/[name].js',
             library: ['<%= namespace %>', '[name]'],
-            path: path.resolve(__dirname, 'dist'),
-            libraryTarget: 'umd'
+            path: path.resolve(__dirname, 'dist')
         },
 
         resolve: {
@@ -46,7 +45,7 @@ module.exports = function (env) {
 
         plugins: [
             new WebpackEventPlugin([{
-                hook: 'after-emit',
+                hook: 'afterEmit',
                 callback: (compilation, callback) => {
                     if (compilation.errors != null && compilation.errors.length > 0) {
                         callback();

@@ -1,5 +1,5 @@
-function create(project) {
-    switch (project) {
+export default function deploy(type: string, name?: string) {
+    switch (type) {
         case 'webresource':
             require('./webresource')();
             break;
@@ -9,15 +9,8 @@ function create(project) {
         case 'workflow':
             require('./project')('workflow');
             break;
-        case 'console':
-            require('./consoleProject')();
-            break;
         default:
-            console.log('Unknown project type. Enter webresource, plugin, workflow or console');
+            console.log('Unknown type. Enter webresource, plugin or workflow');
             break;
     }
-}
-
-module.exports = (...args) => {
-    create(...args);
 }

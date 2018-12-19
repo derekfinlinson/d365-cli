@@ -2,7 +2,10 @@
 
 "use strict";
 
-const program = require("commander");
+import * as program from 'commander';
+import add from './commands/add';
+import create from './commands/create';
+import deploy from './commands/deploy';
 
 program
     .version(require('../package').version)
@@ -13,7 +16,7 @@ program
     .command("create <project>")
     .description("Create a new project (webresource, plugin, workflow, console)")
     .action((project) => {
-        require("../lib/create")(project);
+        create(project);
     });
 
 // Add command
@@ -21,7 +24,15 @@ program
     .command("add <type> <name>")
     .description("Add a new file (css, html, script, test-script, plugin, workflow)")
     .action((type, name) => {
-        require("../lib/add")(type, name);
+        add(type, name);
+    });
+
+    // Add command
+program
+    .command("deploy <type> [name]")
+    .description("Deploy file(s) to D365 (webresource, plugin, workflow)")
+    .action((type, name) => {
+        deploy(type, name);
     });
 
 // Show help on unknown command
