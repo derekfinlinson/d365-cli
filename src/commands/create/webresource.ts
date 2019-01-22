@@ -1,4 +1,4 @@
-import * as inquirer from 'inquirer';
+import { prompt } from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as spawn from 'cross-spawn';
@@ -17,17 +17,20 @@ interface WebResourceConfig {
 }
 
 export default async function webresource() {
-    const config = await prompt();
+    const config = await getConfig();
 
     write(config);
-    install(config);
+
+    if (process.env.JEST_WORKER_ID === undefined) {
+        install(config);
+    }
 
     console.log();
     console.log("web resource project created");
     console.log();
 }
 
-function prompt(): Promise<WebResourceConfig> {
+function getConfig(): Promise<WebResourceConfig> {
     console.log();
     console.log('enter web resource project configuration:');
     console.log();
@@ -97,7 +100,7 @@ function prompt(): Promise<WebResourceConfig> {
         },
         {
             type: 'password',
-            name: 'clientid',
+            name: 'clientId',
             message: 'enter client id:',
             when: (config: WebResourceConfig) => {
                 return config.authType === 'client'
@@ -105,7 +108,7 @@ function prompt(): Promise<WebResourceConfig> {
         },
         {
             type: 'password',
-            name: 'clientsecret',
+            name: 'clientSecret',
             message: 'enter client secret:',
             when: (config: WebResourceConfig) => {
                 return config.authType === 'client'
@@ -118,7 +121,7 @@ function prompt(): Promise<WebResourceConfig> {
         }
     ];
 
-    return inquirer.prompt(questions);
+    return prompt(questions);
 }
   
 function write (config: WebResourceConfig) {

@@ -46,9 +46,9 @@ module.exports = function (env) {
         plugins: [
             new WebpackEventPlugin([{
                 hook: 'afterEmit',
-                callback: (compilation, callback) => {
+                callback: (compilation) => {
                     if (compilation.errors != null && compilation.errors.length > 0) {
-                        callback();
+                        return;
                     } else {
                         const uploadConfig = {
                             tenant: creds.tenant,
@@ -71,7 +71,7 @@ module.exports = function (env) {
                         });
 
                         webResource.upload(uploadConfig, assets).then(() => {
-                            callback();
+                            return;
                         }, (error) => {
                             throw new Error(error);
                         });

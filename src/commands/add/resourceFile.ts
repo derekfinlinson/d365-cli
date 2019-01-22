@@ -1,4 +1,4 @@
-import * as inquirer from 'inquirer';
+import { prompt } from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -9,7 +9,7 @@ interface FileConfig {
 }
 
 export default async function resourceFile(name: string, extension: string) {
-    const answers: FileConfig = await prompt();
+    const answers: FileConfig = await getConfig();
 
     answers.filename = name;
 
@@ -18,7 +18,7 @@ export default async function resourceFile(name: string, extension: string) {
     console.log(`Added file ${name}`);
 }
 
-function prompt(): Promise<FileConfig> {
+function getConfig(): Promise<FileConfig> {
     console.log();
     console.log(`enter file options`);
     console.log();
@@ -36,7 +36,7 @@ function prompt(): Promise<FileConfig> {
         }
     ];
 
-    return inquirer.prompt(questions);
+    return prompt(questions);
 }
 
 function write(config: FileConfig, extension: string): void {

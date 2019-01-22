@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 
-export default async function test(filename: string) {
+export default function test(filename: string) {
     write(filename);
 
     console.log();
@@ -28,7 +28,7 @@ function write(filename: string) {
     }
 
     // Write script test file
-    let content: string = fs.readFileSync(path.resolve(templatePath, 'test.ts'), 'utf8');
+    let content: string = fs.readFileSync(path.resolve(templatePath, 'testScript.ts'), 'utf8');
     
     content = content.replace(/<%= filename %>/g, filename);
     

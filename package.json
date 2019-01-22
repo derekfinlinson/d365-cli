@@ -14,7 +14,8 @@
     "build": "tsc && npm run copy-templates && npm run copy-sn",
     "dev": "tsc -w",
     "copy-templates": "cp -r ./src/commands/add/templates ./dist/commands/add && cp -r ./src/commands/create/templates ./dist/commands/create",
-    "copy-sn": "cp ./src/commands/create/sn.exe ./dist/commands/create && cp ./src/commands/create/sn.exe.config ./dist/commands/create"
+    "copy-sn": "cp ./src/commands/create/sn.exe ./dist/commands/create && cp ./src/commands/create/sn.exe.config ./dist/commands/create",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -42,17 +43,32 @@
   "devDependencies": {
     "@types/cross-spawn": "^6.0.0",
     "@types/inquirer": "0.0.43",
+    "@types/jest": "^23.3.10",
     "@types/node": "^10.12.15",
     "commitizen": "^3.0.5",
     "cross-spawn": "^6.0.5",
     "cz-conventional-changelog": "^2.1.0",
     "jest": "^23.6.0",
     "semantic-release": "^15.12.4",
+    "ts-jest": "^23.10.5",
     "typescript": "^3.2.2"
   },
   "config": {
     "commitizen": {
       "path": "cz-conventional-changelog"
     }
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.tsx?$": "<rootDir>/node_modules/ts-jest/preprocessor.js"
+    },
+    "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(tsx?|jsx?)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "json",
+      "jsx"
+    ]
   }
 }
