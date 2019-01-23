@@ -26,7 +26,7 @@ export default async function webresource() {
     }
 
     console.log();
-    console.log("web resource project created");
+    console.log('web resource project created');
     console.log();
 }
 
@@ -182,7 +182,7 @@ function install(config: WebResourceConfig) {
         'webpack',
         'webpack-cli',
         'babel-loader',
-        'ts-loader',
+        'acorn',
         '-D'
     ];
 
@@ -191,10 +191,16 @@ function install(config: WebResourceConfig) {
         '@babel/polyfill',
         '@babel/core',
         '@babel/preset-env',
-        "@babel/plugin-proposal-class-properties",
-        "@babel/plugin-proposal-object-rest-spread",
-        "@babel/preset-typescript",
+        '@babel/plugin-proposal-class-properties',
+        '@babel/plugin-proposal-object-rest-spread',
+        '@babel/preset-typescript',
+        '@babel/plugin-transform-runtime',
         '-D'
+    ];
+
+    const babelRuntime = [
+        command,
+        '@babel/runtime'
     ];
 
     console.log('install base packages');
@@ -217,6 +223,11 @@ function install(config: WebResourceConfig) {
     console.log();
 
     spawn.sync(config.package, babel, {
+        cwd: process.cwd(),
+        stdio: 'inherit'
+    });
+
+    spawn.sync(config.package, babelRuntime, {
         cwd: process.cwd(),
         stdio: 'inherit'
     });

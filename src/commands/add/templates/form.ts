@@ -1,16 +1,7 @@
-let form: <%= filename %>;
-
 export function onLoad(executionContext?: Xrm.Page.EventContext): void {
-    form = new <%= filename %>();
-    form.onLoad(executionContext);
-}
+    // Define on load events
 
-class <%= filename %> {
-    onLoad(executionContext?: Xrm.Page.EventContext): void {
-        // Define on load events
+    // Add on change events
 
-        // Add on change events
-
-        // Add on save events
-    }
+    // Add on save events
 }

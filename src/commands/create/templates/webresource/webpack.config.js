@@ -23,10 +23,7 @@ module.exports = function (env) {
                     test: /\.ts(x?)$/,
                     exclude: /node_modules/,
                     use: [
-                        'babel-loader',
-                        {
-                            loader: 'ts-loader'
-                        }
+                        'babel-loader'
                     ]
                 }, {
                     test: /\.js$/,

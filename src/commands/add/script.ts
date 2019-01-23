@@ -83,20 +83,14 @@ function write(config: ScriptConfig) {
         return;
     }
 
-    let content: string;
-
     switch (config.type) {
         case 'form':
-            content = fs.readFileSync(path.resolve(templatePath, 'form.ts'), 'utf8');
+            fs.copyFileSync(path.resolve(templatePath, 'form.ts'), path.resolve(destinationPath, 'src', 'scripts', `${config.filename}.ts`));
             break;
         case 'ribbon':
-            content = fs.readFileSync(path.resolve(templatePath, 'ribbon.ts'), 'utf8');
+        fs.copyFileSync(path.resolve(templatePath, 'ribbon.ts'), path.resolve(destinationPath, 'src', 'scripts', `${config.filename}.ts`));
             break;
     }
-
-    content = content.replace(/<%= filename %>/g, config.filename);
-
-    fs.writeFileSync(path.resolve(destinationPath, 'src', 'scripts', `${config.filename}.ts`), content);
 
     // Update config.json
     if (fs.existsSync(path.resolve(destinationPath, 'config.json'))) {

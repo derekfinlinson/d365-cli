@@ -99,12 +99,6 @@ describe('add script files', () => {
 
         expect(fs.existsSync(path.resolve(projectPath, 'src', 'scripts', 'Form.ts'))).toBeTruthy();
 
-        const content = fs.readFileSync(path.resolve(projectPath, 'src', 'scripts', 'Form.ts'), 'utf8');
-
-        expect(content).toContain('let form: Form;');
-        expect(content).toContain('form = new Form()');
-        expect(content).toContain(`class Form`);
-
         const config = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'config.json'), 'utf8'));
 
         expect(config.webResources[0].path).toBe('./dist/scripts/Form.js');
@@ -130,12 +124,6 @@ describe('add script files', () => {
         await script('Form');
 
         expect(fs.existsSync(path.resolve(projectPath, 'src', 'scripts', 'Form.ts'))).toBeTruthy();
-
-        const content = fs.readFileSync(path.resolve(projectPath, 'src', 'scripts', 'Form.ts'), 'utf8');
-
-        expect(content).toContain('let form: Form;');
-        expect(content).toContain('form = new Form()');
-        expect(content).toContain(`class Form`);
 
         const config = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'config.json'), 'utf8'));
 
