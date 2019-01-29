@@ -137,7 +137,6 @@ function write (config: WebResourceConfig) {
     fs.copyFileSync(path.resolve(templatePath, 'config.json'), path.resolve(destinationPath, 'config.json'));
     fs.copyFileSync(path.resolve(templatePath, 'tsconfig.json'), path.resolve(destinationPath, 'tsconfig.json'));
     fs.copyFileSync(path.resolve(templatePath, '.babelrc'), path.resolve(destinationPath, '.babelrc'));
-    fs.copyFileSync(path.resolve(templatePath, 'browserslist'), path.resolve(destinationPath, 'browserslist'));
 
     // Add namespace to webpack config
     let content: string = fs.readFileSync(path.resolve(templatePath, 'webpack.config.js'), 'utf8');
@@ -189,6 +188,7 @@ function install(config: WebResourceConfig) {
 
     const babel = [
         command,
+        '@babel/polyfill',
         '@babel/core',
         '@babel/preset-env',
         '@babel/plugin-proposal-class-properties',
@@ -198,9 +198,9 @@ function install(config: WebResourceConfig) {
         '-D'
     ];
 
-    const babelPolyfill = [
+    const babelRuntime = [
         command,
-        '@babel/polyfill',
+        '@babel/runtime'
     ];
 
     console.log('install base packages');
@@ -227,7 +227,7 @@ function install(config: WebResourceConfig) {
         stdio: 'inherit'
     });
 
-    spawn.sync(config.package, babelPolyfill, {
+    spawn.sync(config.package, babelRuntime, {
         cwd: process.cwd(),
         stdio: 'inherit'
     });

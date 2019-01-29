@@ -3,14 +3,21 @@
         [
             "@babel/preset-env",
             {
+                "targets": {
+                    "browsers": [
+                        "last 2 versions",
+                        "ie >= 11"
+                    ]
+                },
                 "modules": false,
                 "useBuiltIns": "usage"
             }
         ],
-        "@babel/preset-typescript"
+        "@babel/typescript"
     ],
     "plugins": [
         "@babel/proposal-class-properties",
-        "@babel/proposal-object-rest-spread"
+        "@babel/proposal-object-rest-spread",
+        "@babel/transform-runtime"
     ]
 }
