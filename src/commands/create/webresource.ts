@@ -183,6 +183,7 @@ function install(config: WebResourceConfig) {
         'webpack',
         'webpack-cli',
         'babel-loader',
+        'ts-loader',
         'acorn',
         '-D'
     ];
@@ -194,7 +195,6 @@ function install(config: WebResourceConfig) {
         '@babel/plugin-proposal-class-properties',
         '@babel/plugin-proposal-object-rest-spread',
         '@babel/preset-typescript',
-        '@babel/plugin-transform-runtime',
         '-D'
     ];
 

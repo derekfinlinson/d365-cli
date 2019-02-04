@@ -38,7 +38,8 @@
   "homepage": "https://github.com/derekfinlinson/d365-cli#readme",
   "dependencies": {
     "commander": "^2.19.0",
-    "inquirer": "^6.2.1"
+    "inquirer": "^6.2.1",
+    "cross-spawn": "^6.0.5"
   },
   "devDependencies": {
     "@types/cross-spawn": "^6.0.0",
@@ -46,7 +47,6 @@
     "@types/jest": "^23.3.10",
     "@types/node": "^10.12.15",
     "commitizen": "^3.0.5",
-    "cross-spawn": "^6.0.5",
     "cz-conventional-changelog": "^2.1.0",
     "jest": "^23.6.0",
     "semantic-release": "^15.12.4",
