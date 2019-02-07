@@ -199,7 +199,7 @@ function install(config: WebResourceConfig) {
 
     const babelPolyfill = [
         command,
-        '@babel/polyfill',
+        '@babel/polyfill'
     ];
 
     console.log('install base packages');
