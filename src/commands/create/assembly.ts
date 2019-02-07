@@ -1,4 +1,4 @@
-import * as inquirer from 'inquirer';
+import { prompt } from 'inquirer';
 import * as fs from "fs";
 import * as path from "path";
 import * as https from "https";
@@ -18,7 +18,7 @@ export default async function assembly(type: string) {
     const xrmVersion: Promise<string> = getLatestXrmVersion();
     const versions: string[] = await getSdkVersions();
 
-    const config: AssemblyConfig = await prompt(type, versions);
+    const config: AssemblyConfig = await getConfig(type, versions);
 
     config.xrmVersion = await xrmVersion;
 
@@ -79,7 +79,7 @@ function getLatestXrmVersion(): Promise<string> {
     });
 }
 
-function prompt(type: string, versions: string[]): Promise<AssemblyConfig> {
+function getConfig(type: string, versions: string[]): Promise<AssemblyConfig> {
     console.log();
     console.log(`enter ${type} project configuration:`);
     console.log();
@@ -98,7 +98,7 @@ function prompt(type: string, versions: string[]): Promise<AssemblyConfig> {
         }
     ];
 
-    return inquirer.prompt(questions);
+    return prompt(questions);
 }
 
 function write(type: string, config: AssemblyConfig) {

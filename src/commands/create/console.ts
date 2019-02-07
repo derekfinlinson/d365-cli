@@ -1,4 +1,4 @@
-import * as inquirer from 'inquirer';
+import { prompt } from 'inquirer';
 import * as fs from "fs";
 import * as path from "path";
 import * as https from "https";
@@ -16,7 +16,7 @@ export default async function consoleProject() {
 
     const versions = await getVersions();
 
-    const config: ConsoleConfig = await prompt(versions);
+    const config: ConsoleConfig = await getConfig(versions);
 
     write(config);
 
@@ -51,7 +51,7 @@ function getVersions(): Promise<string[]> {
     });
 }
 
-function prompt(versions: string[]): Promise<ConsoleConfig> {
+function getConfig(versions: string[]): Promise<ConsoleConfig> {
     console.log();
     console.log('cnter console project configuration:');
     console.log();
@@ -70,7 +70,7 @@ function prompt(versions: string[]): Promise<ConsoleConfig> {
         }
     ];
 
-    return inquirer.prompt(questions);
+    return prompt(questions);
 }
 
 function write(config: ConsoleConfig) {

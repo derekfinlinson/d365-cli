@@ -168,6 +168,7 @@ function install(config: WebResourceConfig) {
         command,
         '@types/xrm',
         'typescript',
+        'ts-lint',
         'xrm-webapi',
         'jest',
         'ts-jest',
@@ -192,8 +193,6 @@ function install(config: WebResourceConfig) {
         command,        
         '@babel/core',
         '@babel/preset-env',
-        '@babel/plugin-proposal-class-properties',
-        '@babel/plugin-proposal-object-rest-spread',
         '@babel/preset-typescript',
         '-D'
     ];
