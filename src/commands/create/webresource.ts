@@ -169,6 +169,7 @@ function install(config: WebResourceConfig) {
         '@types/xrm',
         'typescript',
         'ts-lint',
+        'd365-common',
         'xrm-webapi',
         'jest',
         'ts-jest',
