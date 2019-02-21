@@ -174,24 +174,13 @@ function install(config: WebResourceConfig) {
         'jest',
         'ts-jest',
         'xrm-mock',
-        '-D'
-    ];
-
-    const webpack = [
-        command,
         'node-webresource',
         'webpack-event-plugin',
         'source-map-loader',
         'webpack',
-        'webpack-cli',
         'babel-loader',
         'ts-loader',
-        'acorn',
-        '-D'
-    ];
-
-    const babel = [
-        command,        
+        'webpack-cli',     
         '@babel/core',
         '@babel/preset-env',
         '@babel/preset-typescript',
@@ -207,22 +196,6 @@ function install(config: WebResourceConfig) {
     console.log();
 
     spawn.sync(config.package, base, {
-        cwd: process.cwd(),
-        stdio: 'inherit'
-    });
-
-    console.log('install webpack');
-    console.log();
-
-    spawn.sync(config.package, webpack, {
-        cwd: process.cwd(),
-        stdio: 'inherit'
-    });
-
-    console.log('install babel');
-    console.log();
-
-    spawn.sync(config.package, babel, {
         cwd: process.cwd(),
         stdio: 'inherit'
     });
