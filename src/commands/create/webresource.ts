@@ -34,7 +34,7 @@ function getConfig(): Promise<WebResourceConfig> {
     console.log();
     console.log('enter web resource project configuration:');
     console.log();
-    
+
     const questions = [
         {
             type: 'input',
@@ -123,8 +123,8 @@ function getConfig(): Promise<WebResourceConfig> {
 
     return prompt(questions);
 }
-  
-function write (config: WebResourceConfig) {
+
+function write(config: WebResourceConfig) {
     let destinationPath = process.cwd();
     let templatePath = path.resolve(__dirname, 'templates', 'webresource');
 
@@ -141,9 +141,9 @@ function write (config: WebResourceConfig) {
 
     // Add namespace to webpack config
     let content: string = fs.readFileSync(path.resolve(templatePath, 'webpack.config.js'), 'utf8');
-    
+
     content = content.replace('<%= namespace %>', config.namespace);
-    
+
     fs.writeFileSync(path.resolve(destinationPath, 'webpack.config.js'), content);
 
     // Write creds.json
@@ -180,7 +180,7 @@ function install(config: WebResourceConfig) {
         'webpack',
         'babel-loader',
         'ts-loader',
-        'webpack-cli',     
+        'webpack-cli',
         '@babel/core',
         '@babel/preset-env',
         '@babel/preset-typescript',

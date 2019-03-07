@@ -88,6 +88,7 @@ module.exports = function(env) {
   } else {
     webpackConfig.mode = "development";
     webpackConfig.watch = true;
+    webpackConfig.devtool = "eval-source-map";
   }
 
   return webpackConfig;
