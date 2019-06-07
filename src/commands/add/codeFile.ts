@@ -41,8 +41,8 @@ function write(type: string, filename: string) {
     
     if (config != null) {
         // Replace namespace if .d365rc file found
-        if (path.basename(destinationPath) !== config.namespace) {
-            namespace = `${config.namespace}.${path.basename(destinationPath)}`;    
+        if (path.basename(destinationPath).toLowerCase() !== config.namespace.toLowerCase()) {
+            namespace = `${config.namespace}.${path.basename(destinationPath)}`;
         }
     }
     
