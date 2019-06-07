@@ -1,4 +1,4 @@
-import * as inquirer from 'inquirer';
+import { Questions, prompt } from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 import test from './test-script';
@@ -12,7 +12,7 @@ interface ScriptConfig {
 }
 
 export default async function script(filename: string) {
-    const config = await prompt();
+    const config = await getConfig();
 
     filename = filename.replace('.js', '');
     filename = filename.replace('.ts', '');
@@ -22,12 +22,12 @@ export default async function script(filename: string) {
     write(config);
 }
 
-function prompt(): Promise<ScriptConfig> {
+function getConfig(): Promise<ScriptConfig> {
     console.log();
     console.log('enter script options:');
     console.log();
 
-    const questions = [
+    const questions: Questions<ScriptConfig> = [
         {
             type: 'list',
             name: 'type',
@@ -61,7 +61,7 @@ function prompt(): Promise<ScriptConfig> {
         }
     ];
 
-    return inquirer.prompt(questions);
+    return prompt(questions);
 }
 
 function write(config: ScriptConfig) {

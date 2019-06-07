@@ -1,4 +1,4 @@
-import { prompt } from 'inquirer';
+import { prompt, Questions } from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as spawn from 'cross-spawn';
@@ -35,7 +35,7 @@ function getConfig(): Promise<WebResourceConfig> {
     console.log('enter web resource project configuration:');
     console.log();
 
-    const questions = [
+    const questions: Questions<WebResourceConfig> = [
         {
             type: 'input',
             name: 'namespace',

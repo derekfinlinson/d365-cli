@@ -1,4 +1,4 @@
-import { prompt } from 'inquirer';
+import { prompt, Questions } from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 
@@ -23,7 +23,7 @@ function getConfig(): Promise<FileConfig> {
     console.log(`enter file options`);
     console.log();
 
-    const questions = [
+    const questions: Questions<FileConfig> = [
         {
             type: 'input',
             name: 'name',

@@ -1,4 +1,4 @@
-import { prompt } from 'inquirer';
+import { prompt, Questions } from 'inquirer';
 import * as fs from "fs";
 import * as path from "path";
 import * as https from "https";
@@ -56,7 +56,7 @@ function getConfig(versions: string[]): Promise<ConsoleConfig> {
     console.log('cnter console project configuration:');
     console.log();
 
-    const questions = [{
+    const questions: Questions<ConsoleConfig> = [{
             type: 'list',
             name: 'version',
             message: 'select D365 SDK Version',
