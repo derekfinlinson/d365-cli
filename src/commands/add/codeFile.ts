@@ -37,14 +37,7 @@ function write(type: string, filename: string) {
     }
 
     let content: string = fs.readFileSync(path.resolve(templatePath, `${type}.cs`), 'utf8');
-    let namespace = config.namespace;
-    
-    if (config != null) {
-        // Replace namespace if .d365rc file found
-        if (path.basename(destinationPath).toLowerCase() !== config.namespace.toLowerCase()) {
-            namespace = `${config.namespace}.${path.basename(destinationPath)}`;
-        }
-    }
+    let namespace = config != null ? config.namespace : 'Xrm';
     
     content = content.replace('<%= namespace %>', namespace);
     content = content.replace('<%= name %>', filename);
