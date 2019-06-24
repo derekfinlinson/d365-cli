@@ -1,4 +1,4 @@
-export function onLoad(executionContext: Xrm.Page.EventContext): void {
+export function onLoad(context: Xrm.Events.EventContext): void {
     // Define on load events
 
     // Add on change events

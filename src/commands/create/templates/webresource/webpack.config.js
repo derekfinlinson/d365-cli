@@ -73,7 +73,7 @@ module.exports = function(env) {
                   return;
                 },
                 error => {
-                  throw new Error(error);
+                  console.log(error.message);
                 }
               );
             }

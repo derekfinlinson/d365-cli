@@ -187,9 +187,10 @@ function install(config: WebResourceConfig) {
         '-D'
     ];
 
-    const babelPolyfill = [
+    const coreJs = [
         command,
-        '@babel/polyfill'
+        'core-js',
+        'regenerator-runtime'
     ];
 
     console.log('install base packages');
@@ -200,7 +201,7 @@ function install(config: WebResourceConfig) {
         stdio: 'inherit'
     });
 
-    spawn.sync(config.package, babelPolyfill, {
+    spawn.sync(config.package, coreJs, {
         cwd: process.cwd(),
         stdio: 'inherit'
     });
