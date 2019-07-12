@@ -19,6 +19,7 @@ Dynamics 365 CLI for scaffolding development projects
 * Workflow project scaffolding
   * Workflow activity base class
   * No ILMerge needed
+* Console application
 
 ## Usage
 
@@ -28,6 +29,8 @@ d365 create webresource
 d365 create plugin
 
 d365 create workflow
+
+d365 create console
 
 d365 add script Account
 
