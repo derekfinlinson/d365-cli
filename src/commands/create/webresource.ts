@@ -1,4 +1,4 @@
-import { prompt, Questions } from 'inquirer';
+import { prompt, QuestionCollection } from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as spawn from 'cross-spawn';
@@ -35,7 +35,7 @@ function getConfig(): Promise<WebResourceConfig> {
     console.log('enter web resource project configuration:');
     console.log();
 
-    const questions: Questions<WebResourceConfig> = [
+    const questions: QuestionCollection<WebResourceConfig> = [
         {
             type: 'input',
             name: 'namespace',
@@ -171,9 +171,6 @@ function install(config: WebResourceConfig) {
         'ts-lint',
         'd365-common',
         'xrm-webapi',
-        'jest',
-        'ts-jest',
-        'xrm-mock',
         'node-webresource',
         'webpack-event-plugin',
         'source-map-loader',

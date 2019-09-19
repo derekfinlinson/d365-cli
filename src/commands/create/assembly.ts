@@ -1,4 +1,4 @@
-import { prompt, Questions } from 'inquirer';
+import { prompt, QuestionCollection } from 'inquirer';
 import * as fs from "fs";
 import * as path from "path";
 import * as https from "https";
@@ -7,6 +7,14 @@ import * as spawn from 'cross-spawn';
 interface AssemblyConfig {
     sdkVersion: string;
     namespace: string;
+    username: string;
+    password: string;
+    clientId: string;
+    clientSecret: string;
+    solution: string;
+    tenant: string;
+    server: string;
+    authType: string;
     xrmVersion?: string;
 }
 
@@ -84,7 +92,8 @@ function getConfig(type: string, versions: string[]): Promise<AssemblyConfig> {
     console.log(`enter ${type} project configuration:`);
     console.log();
 
-    const questions: Questions<AssemblyConfig> = [{
+    const questions: QuestionCollection<AssemblyConfig> = [
+        {
             type: 'list',
             name: 'sdkVersion',
             message: 'select D365 SDK Version',
@@ -111,13 +120,26 @@ function write(type: string, config: AssemblyConfig) {
 
     // Write files
     let content: string = fs.readFileSync(path.resolve(templatePath, 'assembly.csproj'), 'utf8');
-    
+
     content = content.replace(/<%= namespace %>/g, config.namespace);
 
     fs.writeFileSync(path.resolve(destinationPath, `${config.namespace}.csproj`), content);
-    
+
     // Write namespace to .d365rc file
     fs.writeFileSync(path.resolve(destinationPath, '.d365rc'), JSON.stringify({ namespace: config.namespace }));
+
+    // Write creds.json
+    const credConfig = {
+        server: config.server,
+        username: config.username,
+        password: config.password,
+        clientId: config.clientId,
+        clientSecret: config.clientSecret,
+        solution: config.solution,
+        tenant: config.tenant
+    };
+
+    fs.writeFileSync(path.resolve(destinationPath, 'creds.json'), JSON.stringify(credConfig));
 }
 
 function install(config: AssemblyConfig) {
@@ -139,11 +161,11 @@ function install(config: AssemblyConfig) {
         cwd: process.cwd(),
         stdio: 'inherit'
     });
-    
+
     // Sign assembly
     console.log();
     console.log("add key to sign assembly");
 
     const keyPath = path.resolve(process.cwd(), `${config.namespace}.snk`);
-    spawn.sync(path.resolve(__dirname, 'sn.exe'), ['-q', '-k', keyPath], { stdio: 'inherit'});
+    spawn.sync(path.resolve(__dirname, 'sn.exe'), ['-q', '-k', keyPath], { stdio: 'inherit' });
 }

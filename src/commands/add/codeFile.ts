@@ -1,19 +1,20 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { prompt, QuestionCollection } from 'inquirer';
 
-interface Config {
+interface CodeFileConfig {
     namespace: string;
 }
 
 export default async function codeFile(type: string, filename: string) {
-    write(type, filename);
+    await write(type, filename);
 
     console.log();
     console.log(`added ${type} ${filename}.cs`);
     console.log();
 }
 
-function write(type: string, filename: string) {
+async function write(type: string, filename: string) {
     let destinationPath = process.cwd();
     let templatePath = path.resolve(__dirname, 'templates');
 
@@ -25,7 +26,7 @@ function write(type: string, filename: string) {
 
     filename = filename.replace('.cs', '');
 
-    let config: Config;
+    let config: CodeFileConfig;
 
     // Read namespace from .d365rc file
     if (fs.existsSync(path.resolve(destinationPath, '.d365rc'))) {
@@ -34,6 +35,9 @@ function write(type: string, filename: string) {
         config = JSON.parse(fs.readFileSync(path.resolve(destinationPath, '..', '.d365rc'), 'utf8'));
     } else if (fs.existsSync(path.resolve(destinationPath, '..', '..', '.d365rc'))) {
         config = JSON.parse(fs.readFileSync(path.resolve(destinationPath, '..', '..', '.d365rc'), 'utf8'));
+    } else {
+      config = await getConfig();
+      fs.writeFileSync(path.resolve(destinationPath, '.d365rc'), JSON.stringify({ namespace: config.namespace }));
     }
 
     let content: string = fs.readFileSync(path.resolve(templatePath, `${type}.cs`), 'utf8');
@@ -43,4 +47,19 @@ function write(type: string, filename: string) {
     content = content.replace('<%= name %>', filename);
 
     fs.writeFileSync(path.resolve(destinationPath, `${filename}.cs`), content);
+}
+
+function getConfig(): Promise<CodeFileConfig> {
+  console.log();
+
+  const questions: QuestionCollection<CodeFileConfig> = [
+      {
+          type: 'input',
+          name: 'namespace',
+          message: 'default namespace',
+          default: path.basename(process.cwd())
+      }
+  ];
+
+  return prompt(questions);
 }

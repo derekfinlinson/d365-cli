@@ -24,25 +24,25 @@ Dynamics 365 CLI for scaffolding development projects
 ## Usage
 
 ```node
-d365 create webresource
+npx d365 create webresource
 
-d365 create plugin
+npx d365 create plugin
 
-d365 create workflow
+npx d365 create workflow
 
-d365 create console
+npx d365 create console
 
-d365 add script Account
+npx d365 add script Account
 
-d365 add test-script Account
+npx d365 add test-script Account
 
-d365 add html index
+npx d365 add html index
 
-d365 add css stylesheet
+npx d365 add css stylesheet
 
-d365 add plugin AccountCreate
+npx d365 add plugin AccountCreate
 
-d365 add workflow SomeActivity
+npx d365 add workflow SomeActivity
 ```
 
 ## Contributions

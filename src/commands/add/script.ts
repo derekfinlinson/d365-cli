@@ -1,4 +1,4 @@
-import { Questions, prompt } from 'inquirer';
+import { QuestionCollection, prompt } from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 import test from './test-script';
@@ -27,7 +27,7 @@ function getConfig(): Promise<ScriptConfig> {
     console.log('enter script options:');
     console.log();
 
-    const questions: Questions<ScriptConfig> = [
+    const questions: QuestionCollection<ScriptConfig> = [
         {
             type: 'list',
             name: 'type',
