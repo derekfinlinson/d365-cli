@@ -1,0 +1,30 @@
+{
+    "version": "1.0.0",
+    "name": "web-resources",
+    "private": true,
+    "scripts": {
+      "type-check": "tsc --noEmit",
+      "webpack": "webpack --env.prod --hide-modules --display-entrypoints false",
+      "webpack-dev": "webpack --env.dev --hide-modules --display-entrypoints false",
+      "build": "yarn type-check && yarn webpack",
+      "dev": "yarn type-check && yarn webpack-dev",
+      "test": "jest"
+    },
+    "devDependencies": {
+    },
+    "jest": {
+      "transform": {
+        "^.+\\.tsx?$": "ts-jest"
+      },
+      "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(jsx?|tsx?)$",
+      "moduleFileExtensions": [
+        "ts",
+        "tsx",
+        "js",
+        "jsx",
+        "json",
+        "node"
+      ]
+    }
+  }
+  

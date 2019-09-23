@@ -4,119 +4,119 @@ import * as path from 'path';
 import test from './test-script';
 
 interface ScriptConfig {
-    name: string;
-    displayName: string;
-    type: string;
-    test: boolean;
-    filename: string;
+  name: string;
+  displayName: string;
+  type: string;
+  test: boolean;
+  filename: string;
 }
 
 export default async function script(filename: string) {
-    const config = await getConfig();
+  const config = await getConfig();
 
-    filename = filename.replace('.js', '');
-    filename = filename.replace('.ts', '');
+  filename = filename.replace('.js', '');
+  filename = filename.replace('.ts', '');
 
-    config.filename = filename;
-    
-    write(config);
+  config.filename = filename;
+
+  write(config);
 }
 
 function getConfig(): Promise<ScriptConfig> {
-    console.log();
-    console.log('enter script options:');
-    console.log();
+  console.log();
+  console.log('enter script options:');
+  console.log();
 
-    const questions: QuestionCollection<ScriptConfig> = [
+  const questions: QuestionCollection<ScriptConfig> = [
+    {
+      type: 'list',
+      name: 'type',
+      message: 'select script type:',
+      choices: [
         {
-            type: 'list',
-            name: 'type',
-            message: 'select script type:',
-            choices: [
-                {
-                    name: 'form script',
-                    value: 'form'
-                },
-                {
-                    name: 'ribbon script',
-                    value: 'ribbon'
-                }
-            ]
+          name: 'form script',
+          value: 'form'
         },
         {
-            type: 'input',
-            name: 'name',
-            message: 'script unique name (including solution prefix):'
-        },
-        {
-            type: 'input',
-            name: 'displayName',
-            message: 'script display name:'
-        },
-        {
-            type: 'confirm',
-            name: 'test',
-            message: 'include test file?',
-            default: true
+          name: 'ribbon script',
+          value: 'ribbon'
         }
-    ];
+      ]
+    },
+    {
+      type: 'input',
+      name: 'name',
+      message: 'script unique name (including solution prefix):'
+    },
+    {
+      type: 'input',
+      name: 'displayName',
+      message: 'script display name:'
+    },
+    {
+      type: 'confirm',
+      name: 'test',
+      message: 'include test file?',
+      default: true
+    }
+  ];
 
-    return prompt(questions);
+  return prompt(questions);
 }
 
 function write(config: ScriptConfig) {
-    let destinationPath = process.cwd();
-    let templatePath = path.resolve(__dirname, 'templates');
+  let destinationPath = process.cwd();
+  let templatePath = path.resolve(__dirname, 'templates');
 
-    // Check for folders and add if necessary
-    if (!fs.existsSync(path.resolve(destinationPath, 'src'))) {
-        fs.mkdirSync(path.resolve(destinationPath, 'src'));
-    }
+  // Check for folders and add if necessary
+  if (!fs.existsSync(path.resolve(destinationPath, 'src'))) {
+    fs.mkdirSync(path.resolve(destinationPath, 'src'));
+  }
 
-    if (!fs.existsSync(path.resolve(destinationPath, 'src', 'scripts'))) {
-        fs.mkdirSync(path.resolve(destinationPath, 'src', 'scripts'));
-    }
-    
-    // Check if file already exists
-    if (fs.existsSync(path.resolve(destinationPath, 'src', 'scripts', `${config.filename}.ts`))) {
-        console.log(`script ${config.filename} already exists`);
-        return;
-    }
+  if (!fs.existsSync(path.resolve(destinationPath, 'src', 'scripts'))) {
+    fs.mkdirSync(path.resolve(destinationPath, 'src', 'scripts'));
+  }
 
-    switch (config.type) {
-        case 'form':
-            fs.copyFileSync(path.resolve(templatePath, 'form.ts'), path.resolve(destinationPath, 'src', 'scripts', `${config.filename}.ts`));
-            break;
-        case 'ribbon':
-        fs.copyFileSync(path.resolve(templatePath, 'ribbon.ts'), path.resolve(destinationPath, 'src', 'scripts', `${config.filename}.ts`));
-            break;
-    }
+  // Check if file already exists
+  if (fs.existsSync(path.resolve(destinationPath, 'src', 'scripts', `${config.filename}.ts`))) {
+    console.log(`script ${config.filename} already exists`);
+    return;
+  }
 
-    // Update config.json
-    if (fs.existsSync(path.resolve(destinationPath, 'config.json'))) {
-        const file = JSON.parse(fs.readFileSync(path.resolve(destinationPath, 'config.json'), 'utf8'));
+  switch (config.type) {
+    case 'form':
+      fs.copyFileSync(path.resolve(templatePath, 'form.ts'), path.resolve(destinationPath, 'src', 'scripts', `${config.filename}.ts`));
+      break;
+    case 'ribbon':
+      fs.copyFileSync(path.resolve(templatePath, 'ribbon.ts'), path.resolve(destinationPath, 'src', 'scripts', `${config.filename}.ts`));
+      break;
+  }
 
-        file.webResources.push(
-            {
-                path: `./dist/scripts/${config.filename}.js`,
-                name: config.name,
-                displayname: config.displayName,
-                type: 'JavaScript'
-            }
-        );
+  // Update config.json
+  if (fs.existsSync(path.resolve(destinationPath, 'config.json'))) {
+    const file = JSON.parse(fs.readFileSync(path.resolve(destinationPath, 'config.json'), 'utf8'));
 
-        file.entries[config.filename] = `./src/scripts/${config.filename}.ts`;
+    file.webResources.push(
+      {
+        path: `./dist/scripts/${config.filename}.js`,
+        name: config.name,
+        displayname: config.displayName,
+        type: 'JavaScript'
+      }
+    );
 
-        fs.writeFileSync(path.resolve(destinationPath, 'config.json'), JSON.stringify(file), 'utf8');
+    file.entries[config.filename] = `./src/scripts/${config.filename}.ts`;
 
-        console.log();
-        console.log(`added script ${config.filename}.ts`);
-    } else {
-        console.log();
-        console.log('config.json file not found. script added to project but not to build tasks');
-    }
+    fs.writeFileSync(path.resolve(destinationPath, 'config.json'), JSON.stringify(file), 'utf8');
 
-    if (config.test) {
-        test(config.filename);
-    }
+    console.log();
+    console.log(`added script ${config.filename}.ts`);
+  } else {
+    console.log();
+    console.log('config.json file not found. script added to project but not to build tasks');
+  }
+
+  if (config.test) {
+    test(config.filename);
+  }
 }

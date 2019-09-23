@@ -1,16 +1,19 @@
-export default function deploy(type: string, name?: string) {
-    switch (type) {
-        case 'webresource':
-            require('./webresource')();
-            break;
-        case 'plugin':
-            require('./project')('plugin');
-            break;
-        case 'workflow':
-            require('./project')('workflow');
-            break;
-        default:
-            console.log('Unknown type. Enter webresource, plugin or workflow');
-            break;
-    }
+import { webresource } from './deploy/webresource';
+import { assembly } from './deploy/assembly';
+
+export default function deploy(type: string, files?: string) {
+  switch (type) {
+    case 'webresource':
+      webresource(files);
+      break;
+    case 'plugin':
+      assembly('plugin');
+      break;
+    case 'workflow':
+      assembly('workflow');
+      break;
+    default:
+      console.error('Unknown deploy type. Enter webresource, workflow or plugin');
+      break;
+  }
 }

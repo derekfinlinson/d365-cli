@@ -133,7 +133,12 @@ function write(config: WebResourceConfig) {
     console.log();
 
     // Write files
-    fs.copyFileSync(path.resolve(templatePath, 'package.json'), path.resolve(destinationPath, 'package.json'));
+    if (config.package === 'npm') {
+      fs.copyFileSync(path.resolve(templatePath, 'package.json'), path.resolve(destinationPath, 'package.json'));
+    } else {
+      fs.copyFileSync(path.resolve(templatePath, 'package.yarn.json'), path.resolve(destinationPath, 'package.json'));
+    }
+
     fs.copyFileSync(path.resolve(templatePath, 'config.json'), path.resolve(destinationPath, 'config.json'));
     fs.copyFileSync(path.resolve(templatePath, 'tsconfig.json'), path.resolve(destinationPath, 'tsconfig.json'));
     fs.copyFileSync(path.resolve(templatePath, '.babelrc'), path.resolve(destinationPath, '.babelrc'));

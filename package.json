@@ -37,9 +37,11 @@
   },
   "homepage": "https://github.com/derekfinlinson/d365-cli#readme",
   "dependencies": {
+    "adal-node": "^0.2.1",
     "commander": "^3.0.1",
     "cross-spawn": "^7.0.0",
-    "inquirer": "^7.0.0"
+    "inquirer": "^7.0.0",
+    "xrm-webapi": "^7.0.0"
   },
   "devDependencies": {
     "@types/cross-spawn": "^6.0.0",

@@ -1,6 +1,5 @@
 const WebpackEventPlugin = require("webpack-event-plugin");
-const webResource = require("node-webresource");
-const creds = require("./creds.json");
+const spawn = require('cross-spawn');
 const config = require("./config.json");
 const path = require("path");
 
@@ -46,36 +45,11 @@ module.exports = function(env) {
             if (compilation.errors != null && compilation.errors.length > 0) {
               return;
             } else {
-              const uploadConfig = {
-                tenant: creds.tenant,
-                server: creds.server,
-                clientId: creds.clientId,
-                clientSecret: creds.clientSecret,
-                username: creds.username,
-                password: creds.password,
-                webResources: config.webResources,
-                solution: creds.solution
-              };
-
               const assets = Object.keys(compilation.assets)
-                .filter(asset => {
-                  return compilation.assets[asset].emitted;
-                })
-                .map(asset => {
-                  return {
-                    path: "./dist/" + asset,
-                    content: compilation.assets[asset].source().toString("utf8")
-                  };
-                });
+                .filter(asset => compilation.assets[asset].emitted)
+                .map(asset => path.basename(asset));
 
-              webResource.upload(uploadConfig, assets).then(
-                () => {
-                  return;
-                },
-                error => {
-                  console.log(error.message);
-                }
-              );
+              spawn('d365', ['deploy', 'webresource', assets.join(',')], { cwd: process.cwd(), stdio: 'inherit' });
             }
           }
         }
