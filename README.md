@@ -45,7 +45,7 @@ npx d365-cli add plugin AccountCreate
 
 npx d365-cli add workflow SomeActivity
 
-npm d365-cli deploy webresource
+npx d365-cli deploy webresource
 ```
 
 ## Contributions
