@@ -208,4 +208,3 @@ function install(config: WebResourceConfig) {
         stdio: 'inherit'
     });
 }
-

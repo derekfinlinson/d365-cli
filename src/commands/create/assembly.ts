@@ -6,7 +6,7 @@ import * as spawn from 'cross-spawn';
 
 interface AssemblyConfig {
     sdkVersion: string;
-    namespace: string;
+    name: string;
     username: string;
     password: string;
     clientId: string;
@@ -19,9 +19,7 @@ interface AssemblyConfig {
 }
 
 export default async function assembly(type: string) {
-    console.log();
-    console.log(`create ${type} project`);
-    console.log();
+    console.log(`\r\ncreate ${type} project\r\n`);
 
     const xrmVersion: Promise<string> = getLatestXrmVersion();
     const versions: string[] = await getSdkVersions();
@@ -34,9 +32,7 @@ export default async function assembly(type: string) {
 
     install(config);
 
-    console.log();
-    console.log(`${type} project created`);
-    console.log();
+    console.log(`\r\n${type} project created\r\n`);
 }
 
 function getSdkVersions(): Promise<string[]> {
@@ -88,9 +84,7 @@ function getLatestXrmVersion(): Promise<string> {
 }
 
 function getConfig(type: string, versions: string[]): Promise<AssemblyConfig> {
-    console.log();
-    console.log(`enter ${type} project configuration:`);
-    console.log();
+    console.log(`\r\nenter ${type} project configuration:\r\n`);
 
     const questions: QuestionCollection<AssemblyConfig> = [
         {
@@ -101,10 +95,72 @@ function getConfig(type: string, versions: string[]): Promise<AssemblyConfig> {
         },
         {
             type: 'input',
-            name: 'namespace',
-            message: 'default namespace',
+            name: 'name',
+            message: 'project name',
             default: path.basename(process.cwd())
-        }
+        },
+        {
+          type: 'input',
+          name: 'server',
+          message: 'enter dynamics 365 url (https://org.crm.dynamics.com):'
+      },
+      {
+          type: 'input',
+          name: 'tenant',
+          message: 'enter tenant (org.onmicrosoft.com):'
+      },
+      {
+          type: 'list',
+          name: 'authType',
+          message: 'select authentication method:',
+          choices: [
+              {
+                  name: 'username/password',
+                  value: 'user'
+              },
+              {
+                  name: 'client id/client secret',
+                  value: 'client'
+              }
+          ]
+      },
+      {
+          type: 'input',
+          name: 'username',
+          message: 'enter dynamics 365 username:',
+          when: (config: AssemblyConfig) => {
+              return config.authType === 'user'
+          }
+      },
+      {
+          type: 'password',
+          name: 'password',
+          message: 'enter dynamics 365 password:',
+          when: (config: AssemblyConfig) => {
+              return config.authType === 'user'
+          }
+      },
+      {
+          type: 'password',
+          name: 'clientId',
+          message: 'enter client id:',
+          when: (config: AssemblyConfig) => {
+              return config.authType === 'client'
+          }
+      },
+      {
+          type: 'password',
+          name: 'clientSecret',
+          message: 'enter client secret:',
+          when: (config: AssemblyConfig) => {
+              return config.authType === 'client'
+          }
+      },
+      {
+          type: 'input',
+          name: 'solution',
+          message: 'dynamics 365 solution unique name:'
+      }
     ];
 
     return prompt(questions);
@@ -114,19 +170,16 @@ function write(type: string, config: AssemblyConfig) {
     let destinationPath = process.cwd();
     let templatePath = path.resolve(__dirname, 'templates', 'assembly');
 
-    console.log();
-    console.log(`add ${type} project files`);
-    console.log();
+    console.log(`\r\nadd ${type} project files\r\n`);
 
     // Write files
+    fs.writeFileSync(path.resolve(destinationPath, 'config.json'), JSON.stringify({}));
+
     let content: string = fs.readFileSync(path.resolve(templatePath, 'assembly.csproj'), 'utf8');
 
-    content = content.replace(/<%= namespace %>/g, config.namespace);
+    content = content.replace(/<%= namespace %>/g, config.name);
 
-    fs.writeFileSync(path.resolve(destinationPath, `${config.namespace}.csproj`), content);
-
-    // Write namespace to .d365rc file
-    fs.writeFileSync(path.resolve(destinationPath, '.d365rc'), JSON.stringify({ namespace: config.namespace }));
+    fs.writeFileSync(path.resolve(destinationPath, `${config.name}.csproj`), content);
 
     // Write creds.json
     const credConfig = {
@@ -143,8 +196,7 @@ function write(type: string, config: AssemblyConfig) {
 }
 
 function install(config: AssemblyConfig) {
-    console.log('install nuget packages');
-    console.log();
+    console.log('install nuget packages\r\n');
 
     // Install nuget packages
     spawn.sync('dotnet', ['add', 'package', 'Microsoft.CrmSdk.Workflow', '-v', config.sdkVersion, '-n'], {
@@ -163,9 +215,8 @@ function install(config: AssemblyConfig) {
     });
 
     // Sign assembly
-    console.log();
-    console.log("add key to sign assembly");
+    console.log('\r\nadd key to sign assembly');
 
-    const keyPath = path.resolve(process.cwd(), `${config.namespace}.snk`);
+    const keyPath = path.resolve(process.cwd(), `${config.name}.snk`);
     spawn.sync(path.resolve(__dirname, 'sn.exe'), ['-q', '-k', keyPath], { stdio: 'inherit' });
 }

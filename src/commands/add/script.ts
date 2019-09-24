@@ -23,9 +23,7 @@ export default async function script(filename: string) {
 }
 
 function getConfig(): Promise<ScriptConfig> {
-  console.log();
-  console.log('enter script options:');
-  console.log();
+  console.log('\r\nenter script options:\r\n');
 
   const questions: QuestionCollection<ScriptConfig> = [
     {
@@ -40,6 +38,10 @@ function getConfig(): Promise<ScriptConfig> {
         {
           name: 'ribbon script',
           value: 'ribbon'
+        },
+        {
+          name: 'other',
+          value: 'other'
         }
       ]
     },
@@ -90,6 +92,8 @@ function write(config: ScriptConfig) {
     case 'ribbon':
       fs.copyFileSync(path.resolve(templatePath, 'ribbon.ts'), path.resolve(destinationPath, 'src', 'scripts', `${config.filename}.ts`));
       break;
+    case 'other':
+      fs.writeFileSync(path.resolve(destinationPath, 'src', 'scripts', `${config.filename}.ts`), '');
   }
 
   // Update config.json
@@ -109,11 +113,9 @@ function write(config: ScriptConfig) {
 
     fs.writeFileSync(path.resolve(destinationPath, 'config.json'), JSON.stringify(file), 'utf8');
 
-    console.log();
-    console.log(`added script ${config.filename}.ts`);
+    console.log(`\r\nadded script ${config.filename}.ts`);
   } else {
-    console.log();
-    console.log('config.json file not found. script added to project but not to build tasks');
+    console.log('\r\nconfig.json file not found. script added to project but not to build tasks');
   }
 
   if (config.test) {

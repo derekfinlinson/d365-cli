@@ -10,9 +10,7 @@ interface ConsoleConfig {
 }
 
 export default async function consoleProject() {
-    console.log();
-    console.log('create console project');
-    console.log();
+    console.log('\r\ncreate console project\r\n');
 
     const versions = await getVersions();
 
@@ -22,9 +20,7 @@ export default async function consoleProject() {
 
     install(config);
 
-    console.log();
-    console.log("console project created");
-    console.log();
+    console.log('\r\nnconsole project created\r\n');
 }
 
 function getVersions(): Promise<string[]> {
@@ -40,7 +36,7 @@ function getVersions(): Promise<string[]> {
                 response.on('end', () => {
                     const versions = JSON.parse(body).data[0].versions.map((v: any) => {
                         return v.version;
-                    });
+                    }).reverse();;
 
                     resolve(versions);
                 });
