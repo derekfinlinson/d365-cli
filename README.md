@@ -47,6 +47,9 @@ npx d365-cli add workflow SomeActivity
 
 npx d365-cli deploy webresource
 ```
+## Deploying
+
+To deploy, sign in [here](https://login.microsoftonline.com/common/oauth2/authorize?response_type=code&client_id=c67c746f-9745-46eb-83bb-5742263736b7&redirect_uri=https://github.com/derekfinlinson/d365-cli) to grant access to your Dynamics 365 organization.
 
 ## Contributions
 
