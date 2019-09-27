@@ -176,7 +176,6 @@ function install(config: WebResourceConfig) {
         'ts-lint',
         'd365-common',
         'xrm-webapi',
-        'node-webresource',
         'webpack-event-plugin',
         'source-map-loader',
         'webpack',
@@ -186,6 +185,10 @@ function install(config: WebResourceConfig) {
         '@babel/core',
         '@babel/preset-env',
         '@babel/preset-typescript',
+        'xrm-mock',
+        'jest',
+        'ts-jest',
+        '@types/jest',
         '-D'
     ];
 
@@ -206,5 +209,14 @@ function install(config: WebResourceConfig) {
     spawn.sync(config.package, coreJs, {
         cwd: process.cwd(),
         stdio: 'inherit'
+    });
+
+    const jestConfig = config.package === 'npm'
+      ? ['npx', 'ts-jest', 'config:init' ]
+      : [ 'yarn', 'ts-jest', 'config:init' ];
+
+    spawn.sync(config.package, jestConfig, {
+      cwd: process.cwd(),
+      stdio: 'inherit'
     });
 }

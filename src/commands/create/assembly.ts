@@ -173,7 +173,7 @@ function write(type: string, config: AssemblyConfig) {
     console.log(`\r\nadd ${type} project files\r\n`);
 
     // Write files
-    fs.writeFileSync(path.resolve(destinationPath, 'config.json'), JSON.stringify({}));
+    fs.writeFileSync(path.resolve(destinationPath, 'config.json'), JSON.stringify({ assembly: config.name }));
 
     let content: string = fs.readFileSync(path.resolve(templatePath, 'assembly.csproj'), 'utf8');
 

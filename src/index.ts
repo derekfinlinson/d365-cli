@@ -8,32 +8,32 @@ import create from './commands/create';
 import deploy from './commands/deploy';
 
 program
-    .version(require('../package').version)
-    .usage("<command> [options]");
+  .version(require('../package').version)
+  .usage("<command> [options]");
 
 // Create command
 program
-    .command("create <project>")
-    .description("Create a new project (webresource, plugin, workflow, console)")
-    .action((project) => {
-        create(project);
-    });
+  .command("create <project>")
+  .description("Create a new project (webresource, plugin, workflow, console)")
+  .action((project) => {
+    create(project);
+  });
 
 // Add command
 program
-    .command("add <type> <name>")
-    .description("Add a new file (css, html, script, test-script, plugin, workflow)")
-    .action((type, name) => {
-        add(type, name);
-    });
+  .command("add <type> <name>")
+  .description("Add a new file (css, html, script, test-script, plugin, workflow)")
+  .action((type, name) => {
+    add(type, name);
+  });
 
-    // Add command
+// Deploy command
 program
-    .command("deploy <type> [name]")
-    .description("Deploy file(s) to D365 (webresource, plugin, workflow)")
-    .action((type, name) => {
-        deploy(type, name);
-    });
+  .command("deploy <type> [name]")
+  .description("Deploy file(s) to D365 (webresource, plugin, workflow)")
+  .action((type, name) => {
+    deploy(type, name);
+  });
 
 // Show help on unknown command
 program
@@ -48,5 +48,5 @@ program
 program.parse(process.argv);
 
 if (!process.argv.slice(2).length) {
-    program.outputHelp();
+  program.outputHelp();
 }

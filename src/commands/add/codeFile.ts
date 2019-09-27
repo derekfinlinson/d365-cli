@@ -1,6 +1,5 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import { prompt, QuestionCollection } from 'inquirer';
 
 export default async function codeFile(type: string, filename: string) {
   await write(type, filename);
@@ -43,23 +42,23 @@ async function write(type: string, filename: string) {
     const file = JSON.parse(fs.readFileSync(path.resolve(destinationPath, 'config.json'), 'utf8'));
 
     if (type === 'plugin') {
-      if (file.plugins == null) {
-        file.plugins = [];
+      if (file.assembly.plugins == null) {
+        file.assembly.plugins = [];
       }
 
-      file.plugins.push(
+      file.assembly.plugins.push(
         {
-          plugin: `${filename}.cs`
+          name: `${filename}.cs`
         }
       );
     } else {
-      if (file.workflows == null) {
-        file.workflows = [];
+      if (file.assembly.workflows == null) {
+        file.assembly.workflows = [];
       }
 
-      file.workflows.push(
+      file.assembly.workflows.push(
         {
-          workflow: `${filename}.cs`
+          name: `${filename}.cs`
         }
       );
     }
