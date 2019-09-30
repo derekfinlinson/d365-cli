@@ -163,6 +163,10 @@ function write(config: WebResourceConfig) {
     };
 
     fs.writeFileSync(path.resolve(destinationPath, 'creds.json'), JSON.stringify(credConfig));
+
+    if (fs.existsSync(path.resolve(destinationPath, '.gitignore'))) {
+      fs.appendFileSync(path.resolve(destinationPath, '.gitignore'), 'creds.json');
+    }
 }
 
 function install(config: WebResourceConfig) {

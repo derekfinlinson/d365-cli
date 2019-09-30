@@ -1,4 +1,7 @@
 import { AuthenticationContext, TokenResponse } from 'adal-node';
+import { ComponentType } from './componentType';
+import { unboundAction } from 'xrm-webapi/dist/webapi-node';
+import { WebApiConfig } from 'xrm-webapi/dist/models';
 
 export interface DeployCredentials {
   tenant: string;
@@ -41,4 +44,16 @@ export function authenticate(creds: DeployCredentials): Promise<string> {
       );
     }
   });
+}
+
+export async function addToSolution(id: string, solution: string, type: ComponentType, apiConfig: WebApiConfig) {
+  const data: any = {
+    ComponentId: id,
+    ComponentType: type,
+    SolutionUniqueName: solution,
+    AddRequiredComponents: false,
+    IncludedComponentSettingsValues: null
+  };
+
+  await unboundAction(apiConfig, 'AddSolutionComponent', data);
 }

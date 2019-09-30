@@ -12,44 +12,70 @@ Dynamics 365 CLI for scaffolding development projects
   * [Webpack](https://webpack.js.org/) for bundling
   * [Babel](https://babeljs.io/) for polyfills and compiling ES2015+  
   * Unit tests using [xrm-mock](https://github.com/camelCaseDave/xrm-mock) and [Jest](https://jestjs.io/)
+  * Deploy web resources
 * Plugin project scaffolding
   * Base plugin classes
   * No ILMerge needed
+  * Deploy plugin assemblies
 * Workflow project scaffolding
   * Workflow activity base class
   * No ILMerge needed
+  * Deploy workflow assemblies
 * Console application project scaffolding
-* Deploy
-  * Deploy web resources
 
 ## Usage
 
+### Installation
+
 ```node
-npx d365-cli create webresource
+#npm
+npm install -g d365-cli
 
-npx d365-cli create plugin
-
-npx d365-cli create workflow
-
-npx d365-cli create console
-
-npx d365-cli add script Account
-
-npx d365-cli add test-script Account
-
-npx d365-cli add html index
-
-npx d365-cli add css stylesheet
-
-npx d365-cli add plugin AccountCreate
-
-npx d365-cli add workflow SomeActivity
-
-npx d365-cli deploy webresource
+#yarn
+yarn global add d365-cli
 ```
-## Deploying
+
+### Create
+
+```node
+d365 create webresource
+
+d365 create plugin
+
+d365 create workflow
+
+d365 create console
+```
+
+### Add
+
+```node
+d365 add script Account
+
+d365 add test-script Account
+
+d365 add html index
+
+d365 add css stylesheet
+
+d365 add plugin AccountCreate
+
+d365 add workflow SomeActivity
+```
+
+### Deploy
 
 To deploy, sign in [here](https://login.microsoftonline.com/common/oauth2/authorize?response_type=code&client_id=c67c746f-9745-46eb-83bb-5742263736b7&redirect_uri=https://github.com/derekfinlinson/d365-cli) to grant access to your Dynamics 365 organization.
+
+Deployment configuration is stored in config.json. Authentication information is stored in creds.json. The "create" and "add" commands will generate and updates these files for you.
+
+```node
+d365 deploy webresource
+
+d365 deploy plugin
+
+d365 deploy workflow
+```
 
 ## Contributions
 

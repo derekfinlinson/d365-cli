@@ -3,10 +3,12 @@ import * as fs from "fs";
 import * as path from "path";
 import * as https from "https";
 import * as spawn from 'cross-spawn';
+import * as glob from 'glob';
 
 interface AssemblyConfig {
     sdkVersion: string;
     name: string;
+    isolation: number,
     username: string;
     password: string;
     clientId: string;
@@ -100,6 +102,21 @@ function getConfig(type: string, versions: string[]): Promise<AssemblyConfig> {
             default: path.basename(process.cwd())
         },
         {
+          type: 'list',
+          name: 'isolation',
+          message: 'select isolation mode',
+          choices: [
+            {
+              name: 'sandbox',
+              value: 2
+            },
+            {
+              name: 'none',
+              value: 1
+            }
+          ]
+        },
+        {
           type: 'input',
           name: 'server',
           message: 'enter dynamics 365 url (https://org.crm.dynamics.com):'
@@ -173,7 +190,14 @@ function write(type: string, config: AssemblyConfig) {
     console.log(`\r\nadd ${type} project files\r\n`);
 
     // Write files
-    fs.writeFileSync(path.resolve(destinationPath, 'config.json'), JSON.stringify({ assembly: config.name }));
+    const assembly = {
+      name: config.name,
+      isolationmode: config.isolation,
+      version: '1.0.0.0',
+      publickeytoken: `${config.name}.snk`
+    };
+
+    fs.writeFileSync(path.resolve(destinationPath, 'config.json'), JSON.stringify(assembly));
 
     let content: string = fs.readFileSync(path.resolve(templatePath, 'assembly.csproj'), 'utf8');
 
@@ -193,6 +217,10 @@ function write(type: string, config: AssemblyConfig) {
     };
 
     fs.writeFileSync(path.resolve(destinationPath, 'creds.json'), JSON.stringify(credConfig));
+
+    if (fs.existsSync(path.resolve(destinationPath, '.gitignore'))) {
+      fs.appendFileSync(path.resolve(destinationPath, '.gitignore'), 'creds.json');
+    }
 }
 
 function install(config: AssemblyConfig) {

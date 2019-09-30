@@ -1,8 +1,9 @@
 import { parseGuid, WebApiConfig, retrieveMultiple, createWithReturnData, update, unboundAction } from 'xrm-webapi/dist/xrm-webapi-node';
-
 import * as fs from 'fs';
 import * as path from 'path';
-import { DeployCredentials, authenticate } from './authentication';
+
+import { DeployCredentials, authenticate, addToSolution } from '../models/shared';
+import { ComponentType } from '../models/componentType';
 
 interface DeployConfig {
   webResources: WebResource[];
@@ -23,10 +24,10 @@ export async function webresource(files?: string) {
   const currentPath = process.cwd();
 
   if (!fs.existsSync(path.resolve(currentPath, 'config.json'))) {
-    console.error('Unable to find config.json file');
+    console.error('unable to find config.json file');
     return;
   } else if (!fs.existsSync(path.resolve(currentPath, 'creds.json'))) {
-    console.error('Unable to find creds.json file');
+    console.error('unable to find creds.json file');
     return;
   }
 
@@ -38,11 +39,11 @@ export async function webresource(files?: string) {
 
     apiConfig = new WebApiConfig("8.2", token, creds.server);
   } catch (error) {
-    console.error(`Authentication failure: ${error}`);
+    console.error(`authentication failure: ${error}`);
     return;
   }
 
-  console.log("\r\nDeploy web resources\r\n");
+  console.log("\r\ndeploy web resources\r\n");
 
   // retrieve assets from CRM then create/update
   const publishXml = await deploy(config, creds.solution, files);
@@ -57,7 +58,7 @@ export async function webresource(files?: string) {
     }
   }
 
-  console.log("\r\nDeployed web resources\r\n");
+  console.log("\r\ndeployed web resources\r\n");
 }
 
 function getWebResourceType(type: string): number {
@@ -98,7 +99,7 @@ async function deploy(config: DeployConfig, solution?: string, files?: string): 
       const resource = config.webResources.filter(r => r.path.endsWith(file));
 
       if (resource.length === 0) {
-        console.error(`Web resource ${file} is not configured`);
+        console.error(`web resource ${file} is not configured`);
         return null;
       } else {
         return resource[0];
@@ -107,7 +108,7 @@ async function deploy(config: DeployConfig, solution?: string, files?: string): 
   }
 
   const promises = resources.map(async resource => {
-    const resourceId = await retrieveResource(resource.name);
+    let resourceId = await retrieveResource(resource.name);
 
     const fileContent = fs.readFileSync(resource.path, 'utf8');
     const content = Buffer.from(fileContent).toString("base64");
@@ -118,19 +119,21 @@ async function deploy(config: DeployConfig, solution?: string, files?: string): 
 
         publishXml.push(updated);
       } catch (error) {
-        console.error(`Failed to update resource: ${error.message}`);
-        return;
+        throw new Error(`failed to update resource: ${error.message}`);
       }
     } else {
       try {
-        const id = await createResource(resource, content);
-
-        if (solution != undefined) {
-          await addToSolution(id, solution)
-        }
+        resourceId = await createResource(resource, content);
       } catch (error) {
-        console.error(`Failed to create resource: ${error.message}`);
-        return;
+        throw new Error(`failed to create resource: ${error.message}`);
+      }
+
+      if (solution != undefined) {
+        try {
+          await addToSolution(resourceId, solution, ComponentType.WebResource, apiConfig)
+        } catch (error) {
+          console.error(`failed to add to solution: ${error.message}`);
+        }
       }
     }
   });
@@ -149,7 +152,7 @@ async function retrieveResource(name: string): Promise<string> {
 }
 
 async function createResource(resource: WebResource, content: string): Promise<string> {
-  console.log(`Create web resource ${resource.name}`);
+  console.log(`create web resource ${resource.name}`);
 
   const webResource: WebResource = {
     webresourcetype: getWebResourceType(resource.type),
@@ -164,7 +167,7 @@ async function createResource(resource: WebResource, content: string): Promise<s
 }
 
 async function updateResource(id: string, resource: WebResource, content: string) {
-  console.log(`Update web resource ${resource.name}`);
+  console.log(`update web resource ${resource.name}`);
 
   const webResource: WebResource = {
     content: content
@@ -173,18 +176,6 @@ async function updateResource(id: string, resource: WebResource, content: string
   await update(apiConfig, "webresourceset", parseGuid(id), webResource);
 
   return `<webresource>{${id}}</webresource>`;
-}
-
-async function addToSolution(id: string, solution: string) {
-  const data: any = {
-    ComponentId: id,
-    ComponentType: 61,
-    SolutionUniqueName: solution,
-    AddRequiredComponents: false,
-    IncludedComponentSettingsValues: null
-  };
-
-  await unboundAction(apiConfig, 'AddSolutionComponent', data);
 }
 
 async function publish(publishXml: string) {
