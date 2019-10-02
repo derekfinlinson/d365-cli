@@ -1,10 +1,15 @@
 import * as fs from 'fs';
 import * as path from 'path';
+import { PluginAssembly } from '../models/pluginAssembly';
 
 export default async function codeFile(type: string, filename: string) {
   await write(type, filename);
 
-  console.log(`\r\nadded ${type} ${filename}.cs\r\n`);
+  console.log(`\r\nadded ${type} ${filename}.cs`);
+
+  if (type === 'plugin') {
+    console.log('\r\nadd plugin steps to config.json');
+  }
 }
 
 async function write(type: string, filename: string) {
@@ -39,29 +44,19 @@ async function write(type: string, filename: string) {
 
   // Update config.json
   if (fs.existsSync(path.resolve(destinationPath, 'config.json'))) {
-    const file = JSON.parse(fs.readFileSync(path.resolve(destinationPath, 'config.json'), 'utf8'));
+    const file: PluginAssembly  = JSON.parse(fs.readFileSync(path.resolve(destinationPath, 'config.json'), 'utf8'));
 
-    if (type === 'plugin') {
-      if (file.assembly.plugins == null) {
-        file.assembly.plugins = [];
-      }
-
-      file.assembly.plugins.push(
-        {
-          name: `${filename}.cs`
-        }
-      );
-    } else {
-      if (file.assembly.workflows == null) {
-        file.assembly.workflows = [];
-      }
-
-      file.assembly.workflows.push(
-        {
-          name: `${filename}.cs`
-        }
-      );
+    if (file.types == null) {
+      file.types = [];
     }
+
+    file.types.push(
+      {
+        name: `${namespace}.${filename}`,
+        typename: `${namespace}.${filename}`,
+        friendlyname: `${namespace}.${filename}`
+      }
+    );
 
     fs.writeFileSync(path.resolve(destinationPath, 'config.json'), JSON.stringify(file), 'utf8');
   }

@@ -46,7 +46,14 @@ export async function webresource(files?: string) {
   console.log("\r\ndeploy web resources\r\n");
 
   // retrieve assets from CRM then create/update
-  const publishXml = await deploy(config, creds.solution, files);
+  let publishXml: string;
+
+  try {
+    publishXml = await deploy(config, creds.solution, files);
+  } catch (error) {
+    console.error(error.message);
+    return;
+  }
 
   // publish resources
   if (publishXml != '') {

@@ -3,7 +3,7 @@ import * as fs from "fs";
 import * as path from "path";
 import * as https from "https";
 import * as spawn from 'cross-spawn';
-import * as glob from 'glob';
+import { PluginAssembly } from '../models/pluginAssembly';
 
 interface AssemblyConfig {
     sdkVersion: string;
@@ -21,7 +21,7 @@ interface AssemblyConfig {
 }
 
 export default async function assembly(type: string) {
-    console.log(`\r\ncreate ${type} project\r\n`);
+    console.log(`\r\ncreate ${type} project`);
 
     const xrmVersion: Promise<string> = getLatestXrmVersion();
     const versions: string[] = await getSdkVersions();
@@ -34,7 +34,7 @@ export default async function assembly(type: string) {
 
     install(config);
 
-    console.log(`\r\n${type} project created\r\n`);
+    console.log(`\r\n${type} project created`);
 }
 
 function getSdkVersions(): Promise<string[]> {
@@ -187,14 +187,16 @@ function write(type: string, config: AssemblyConfig) {
     let destinationPath = process.cwd();
     let templatePath = path.resolve(__dirname, 'templates', 'assembly');
 
-    console.log(`\r\nadd ${type} project files\r\n`);
+    console.log(`\r\nadd ${type} project files`);
 
     // Write files
-    const assembly = {
+    const assembly: PluginAssembly = {
       name: config.name,
       isolationmode: config.isolation,
       version: '1.0.0.0',
-      publickeytoken: `${config.name}.snk`
+      publickeytoken: `${config.name}.snk`,
+      types: [
+      ]
     };
 
     fs.writeFileSync(path.resolve(destinationPath, 'config.json'), JSON.stringify(assembly));
@@ -224,7 +226,7 @@ function write(type: string, config: AssemblyConfig) {
 }
 
 function install(config: AssemblyConfig) {
-    console.log('install nuget packages\r\n');
+    console.log('install nuget packages');
 
     // Install nuget packages
     spawn.sync('dotnet', ['add', 'package', 'Microsoft.CrmSdk.Workflow', '-v', config.sdkVersion, '-n'], {

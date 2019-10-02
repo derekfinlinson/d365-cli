@@ -34,7 +34,7 @@ export async function assembly(type: string) {
     return;
   }
 
-  console.log(`\r\ndeploy ${type}\r\n`);
+  console.log(`\r\ndeploy ${type}`);
 
   try {
     await deployAssembly(config, type, creds.solution, apiConfig);
@@ -43,5 +43,5 @@ export async function assembly(type: string) {
     return;
   }
 
-  console.log(`\r\ndeployed ${type} ${config.name}\r\n`)
+  console.log(`deployed ${type} ${config.name}\r\n`)
 }

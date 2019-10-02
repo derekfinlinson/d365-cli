@@ -4,6 +4,7 @@ import { ComponentType } from './componentType';
 import { WebApiConfig } from 'xrm-webapi/dist/models';
 import { addToSolution } from './shared';
 import { retrieveMultiple, createWithReturnData, update } from 'xrm-webapi/dist/webapi-node';
+import { PluginType, deployType } from './pluginType';
 
 export interface PluginAssembly {
   name?: string;
@@ -13,19 +14,10 @@ export interface PluginAssembly {
   publickeytoken?: string;
   sourcetype?: number;
   culture?: string;
-  types?: AssemblyType[];
+  types?: PluginType[];
 }
 
-interface AssemblyType {
-  name?: string;
-  steps?: Step[];
-}
-
-interface Step {
-
-}
-
-export async function deployAssembly(config: PluginAssembly, type: string, solution: string, apiConfig: WebApiConfig): Promise<string> {
+export async function deployAssembly(config: PluginAssembly, type: string, solution: string, apiConfig: WebApiConfig): Promise<void> {
   const files = glob.sync(`**/${config.name}.dll`);
 
   if (files.length === 0) {
@@ -59,7 +51,20 @@ export async function deployAssembly(config: PluginAssembly, type: string, solut
     }
   }
 
-  return assemblyId;
+  try {
+    console.log('deploy plugin types');
+
+    const promises = config.types.map(async type => {
+      type['pluginassemblyid@odata.bind'] = `/pluginassemblies(${assemblyId})`;
+
+      await deployType(type, solution, apiConfig);
+    });
+
+    await Promise.all(promises);
+  } catch (error) {
+    console.error(error.message);
+    return;
+  }
 }
 
 async function retrieveAssembly(name: string, apiConfig: WebApiConfig) {
