@@ -2,26 +2,38 @@ import { WebApiConfig } from "xrm-webapi/dist/models";
 import { retrieveMultiple, createWithReturnData, update } from "xrm-webapi/dist/webapi-node";
 import { addToSolution } from "./shared";
 import { ComponentType } from "./componentType";
+import { PluginStep } from "./pluginStep";
+import { deployStep } from './pluginStep';
 
 export interface PluginType {
   name: string;
   'pluginassemblyid@odata.bind'?: string;
   typename: string;
   friendlyname: string;
+  steps?: PluginStep[];
+  workflowactivitygroupname: string;
 }
 
 export async function deployType(type: PluginType, solution: string, apiConfig: WebApiConfig): Promise<string> {
   let typeId = await retrieveType(type.name, apiConfig);
 
+  const record: PluginType = {
+    name: type.name,
+    friendlyname: type.friendlyname,
+    typename: type.typename,
+    "pluginassemblyid@odata.bind": type["pluginassemblyid@odata.bind"],
+    workflowactivitygroupname: type.workflowactivitygroupname
+  };
+
   if (typeId != undefined) {
     try {
-      await updateType(typeId, type, apiConfig);
+      await updateType(typeId, record, apiConfig);
     } catch (error) {
       throw new Error(`failed to update plugin type: ${error.message}`);
     }
   } else {
     try {
-      typeId = await createType(type, apiConfig);
+      typeId = await createType(record, apiConfig);
     } catch (error) {
       throw new Error(`failed to create plugin type: ${error.message}`);
     }
@@ -33,6 +45,21 @@ export async function deployType(type: PluginType, solution: string, apiConfig: 
         console.error(`failed to add to solution: ${error.message}`);
       }
     }
+  }
+
+  try {
+    console.log('deploy plugin steps');
+
+    const promises = type.steps.map(async step => {
+      step['plugintypeid@odata.bind'] = `/plugintypes(${typeId})`;
+
+      await deployStep(step, solution, apiConfig);
+    });
+
+    await Promise.all(promises);
+  } catch (error) {
+    console.error(error.message);
+    return;
   }
 
   return typeId;
