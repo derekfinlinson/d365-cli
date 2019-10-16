@@ -191,17 +191,18 @@ async function write(type: string, filename: string, steps: PluginStep[], workfl
       file.types = [];
     }
 
-    const type = {
+    const type: any = {
       name: `${namespace}.${filename}`,
       typename: `${namespace}.${filename}`,
       friendlyname: `${namespace}.${filename}`,
-      workflowactivitygroupname: workflow.group,
+      
       steps: steps
     };
 
     if (workflow != undefined) {
       type.friendlyname = workflow.name;
-      type.name = workflow.name
+      type.name = workflow.name;
+      type.workflowactivitygroupname = workflow.group;
     }
 
     file.types.push(type);

@@ -17,6 +17,7 @@ Dynamics 365 CLI for scaffolding development projects
   * Base plugin classes
   * No ILMerge needed
   * Deploy plugin assemblies and types
+  * Deploy plugin steps
 * Workflow project scaffolding
   * Workflow activity base class
   * No ILMerge needed
