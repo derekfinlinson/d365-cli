@@ -76,7 +76,7 @@ async function retrieveType(name: string, apiConfig: WebApiConfig) {
 async function createType(type: PluginType, apiConfig: WebApiConfig) {
   console.log(`create plugin type ${type.name}`);
 
-  const result = await createWithReturnData(apiConfig, 'plugintypes', type, 'plugintypeid');
+  const result = await createWithReturnData(apiConfig, 'plugintypes', type, '$select=plugintypeid');
 
   return result.plugintypeid;
 }
