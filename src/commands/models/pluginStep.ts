@@ -28,7 +28,7 @@ export async function deployStep(step: PluginStep, solution: string, apiConfig: 
     return;
   }
 
-  const filterId = await getSdkMessageFilterId(step.message, step.entity, apiConfig);
+  const filterId = await getSdkMessageFilterId(messageId, step.entity, apiConfig);
 
   if (filterId == undefined) {
     console.error(`sdk message ${step.message} for entity ${step.entity} not found`);
@@ -74,10 +74,9 @@ async function retrieveStep(name: string, apiConfig: WebApiConfig) {
   return result.value.length > 0 ? result.value[0].sdkmessageprocessingstepid : undefined;
 }
 
-async function getSdkMessageFilterId(name: string, entityName: string, apiConfig: WebApiConfig) {
+async function getSdkMessageFilterId(messageId: string, entityName: string, apiConfig: WebApiConfig) {
   const options = [
-    `?$filter=primaryobjecttypecode eq '${entityName}'`,
-    `&$expand=sdkmessageid($filter=name eq '${name}')`,
+    `?$filter=primaryobjecttypecode eq '${entityName}' and _sdkmessageid_value eq ${messageId}`,
     '&$select=sdkmessagefilterid'
   ].join('');
 
