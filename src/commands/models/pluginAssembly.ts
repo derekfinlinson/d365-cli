@@ -88,7 +88,7 @@ async function createAssembly(config: PluginAssembly, type: string, content: str
     culture: ''
   };
 
-  const result = await createWithReturnData(apiConfig, 'pluginassemblies', assembly, 'pluginassemblyid');
+  const result = await createWithReturnData(apiConfig, 'pluginassemblies', assembly, '$select=pluginassemblyid');
 
   return result.pluginassemblyid;
 }
