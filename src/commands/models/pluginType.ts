@@ -37,14 +37,6 @@ export async function deployType(type: PluginType, solution: string, apiConfig: 
     } catch (error) {
       throw new Error(`failed to create plugin type: ${error.message}`);
     }
-
-    if (solution != undefined) {
-      try {
-        await addToSolution(typeId, solution, ComponentType.PluginType, apiConfig);
-      } catch (error) {
-        console.error(`failed to add to solution: ${error.message}`);
-      }
-    }
   }
 
   try {
