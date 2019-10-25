@@ -100,14 +100,16 @@ function write(config: ScriptConfig) {
   if (fs.existsSync(path.resolve(destinationPath, 'config.json'))) {
     const file = JSON.parse(fs.readFileSync(path.resolve(destinationPath, 'config.json'), 'utf8'));
 
-    file.webResources.push(
-      {
-        path: `./dist/scripts/${config.filename}.js`,
-        name: config.name,
-        displayname: config.displayName,
-        type: 'JavaScript'
-      }
-    );
+    if (file.webResources != null) {
+      file.webResources.push(
+        {
+          path: `./dist/scripts/${config.filename}.js`,
+          name: config.name,
+          displayname: config.displayName,
+          type: 'JavaScript'
+        }
+      );
+    }
 
     file.entries[config.filename] = `./src/scripts/${config.filename}.ts`;
 
