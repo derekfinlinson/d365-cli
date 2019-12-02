@@ -51,19 +51,21 @@ export async function deployAssembly(config: PluginAssembly, type: string, solut
     }
   }
 
-  try {
-    console.log('deploy plugin types');
+  if (config.types != null) {
+    try {
+      console.log('deploy plugin types');
 
-    const promises = config.types.map(async type => {
-      type['pluginassemblyid@odata.bind'] = `/pluginassemblies(${assemblyId})`;
+      const promises = config.types.map(async type => {
+        type['pluginassemblyid@odata.bind'] = `/pluginassemblies(${assemblyId})`;
 
-      await deployType(type, solution, apiConfig);
-    });
+        await deployType(type, solution, apiConfig);
+      });
 
-    await Promise.all(promises);
-  } catch (error) {
-    console.error(error.message);
-    return;
+      await Promise.all(promises);
+    } catch (error) {
+      console.error(error.message);
+      return;
+    }
   }
 }
 
