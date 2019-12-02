@@ -1,6 +1,6 @@
-import { prompt, QuestionCollection } from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
+import prompts = require('prompts');
 
 interface FileConfig {
     name: string;
@@ -9,7 +9,7 @@ interface FileConfig {
 }
 
 export default async function resourceFile(name: string, extension: string) {
-    const answers: FileConfig = await getConfig();
+    const answers = (await getConfig()) as FileConfig;
 
     answers.filename = name;
 
@@ -18,25 +18,25 @@ export default async function resourceFile(name: string, extension: string) {
     console.log(`Added file ${name}`);
 }
 
-function getConfig(): Promise<FileConfig> {
+function getConfig(): Promise<prompts.Answers<string>> {
     console.log();
     console.log(`enter file options`);
     console.log();
 
-    const questions: QuestionCollection<FileConfig> = [
+    const questions: prompts.PromptObject[] = [
         {
-            type: 'input',
+            type: 'text',
             name: 'name',
             message: 'file unique name (including solution prefix):'
         },
         {
-            type: 'input',
+            type: 'text',
             name: 'displayName',
             message: 'file display name:'
         }
     ];
 
-    return prompt(questions);
+    return prompts(questions);
 }
 
 function write(config: FileConfig, extension: string): void {

@@ -1,7 +1,7 @@
-import { QuestionCollection, prompt } from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 import test from './test-script';
+import prompts = require('prompts');
 
 interface ScriptConfig {
   name: string;
@@ -12,7 +12,7 @@ interface ScriptConfig {
 }
 
 export default async function script(filename: string) {
-  const config = await getConfig();
+  const config = (await getConfig()) as ScriptConfig;
 
   filename = filename.replace('.js', '');
   filename = filename.replace('.ts', '');
@@ -22,36 +22,36 @@ export default async function script(filename: string) {
   write(config);
 }
 
-function getConfig(): Promise<ScriptConfig> {
+function getConfig(): Promise<prompts.Answers<string>> {
   console.log('\r\nenter script options:\r\n');
 
-  const questions: QuestionCollection<ScriptConfig> = [
+  const questions: prompts.PromptObject[] = [
     {
-      type: 'list',
+      type: 'select',
       name: 'type',
       message: 'select script type:',
       choices: [
         {
-          name: 'form script',
+          title: 'form script',
           value: 'form'
         },
         {
-          name: 'ribbon script',
+          title: 'ribbon script',
           value: 'ribbon'
         },
         {
-          name: 'other',
+          title: 'other',
           value: 'other'
         }
       ]
     },
     {
-      type: 'input',
+      type: 'text',
       name: 'name',
       message: 'script unique name (including solution prefix):'
     },
     {
-      type: 'input',
+      type: 'text',
       name: 'displayName',
       message: 'script display name:'
     },
@@ -59,11 +59,11 @@ function getConfig(): Promise<ScriptConfig> {
       type: 'confirm',
       name: 'test',
       message: 'include test file?',
-      default: true
+      initial: true
     }
   ];
 
-  return prompt(questions);
+  return prompts(questions);
 }
 
 function write(config: ScriptConfig) {

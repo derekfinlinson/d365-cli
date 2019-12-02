@@ -41,14 +41,14 @@
     "commander": "^3.0.1",
     "cross-spawn": "^7.0.0",
     "glob": "^7.1.4",
-    "inquirer": "^7.0.0",
+    "prompts": "^2.3.0",
     "xrm-webapi": "^7.0.0"
   },
   "devDependencies": {
     "@types/cross-spawn": "^6.0.0",
-    "@types/inquirer": "^6.5.0",
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.5",
+    "@types/prompts": "^2.0.3",
     "cz-conventional-changelog": "^3.0.2",
     "jest": "^24.9.0",
     "semantic-release": "^15.13.24",

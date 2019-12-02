@@ -1,8 +1,8 @@
-import { prompt, QuestionCollection } from 'inquirer';
 import * as fs from "fs";
 import * as path from "path";
 import * as https from "https";
 import * as spawn from 'cross-spawn';
+import prompts = require("prompts");
 
 interface ConsoleConfig {
     version: string;
@@ -14,7 +14,7 @@ export default async function consoleProject() {
 
     const versions = await getVersions();
 
-    const config: ConsoleConfig = await getConfig(versions);
+    const config = (await getConfig(versions)) as ConsoleConfig;
 
     write(config);
 
@@ -47,26 +47,26 @@ function getVersions(): Promise<string[]> {
     });
 }
 
-function getConfig(versions: string[]): Promise<ConsoleConfig> {
+function getConfig(versions: string[]): Promise<prompts.Answers<string>> {
     console.log();
     console.log('cnter console project configuration:');
     console.log();
 
-    const questions: QuestionCollection<ConsoleConfig> = [{
-            type: 'list',
+    const questions: prompts.PromptObject[] = [{
+            type: 'select',
             name: 'version',
             message: 'select D365 SDK Version',
-            choices: versions
+            choices: versions.map(v => ({ title: v, value: v}))
         },
         {
-            type: 'input',
+            type: 'text',
             name: 'namespace',
             message: 'default namespace',
-            default: path.basename(process.cwd())
+            initial: path.basename(process.cwd())
         }
     ];
 
-    return prompt(questions);
+    return prompts(questions);
 }
 
 function write(config: ConsoleConfig) {

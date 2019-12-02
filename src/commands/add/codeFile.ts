@@ -1,8 +1,8 @@
-import { QuestionCollection, prompt } from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 import { PluginAssembly } from '../models/pluginAssembly';
 import { PluginStep } from '../models/pluginStep';
+import prompts = require('prompts');
 
 export default async function codeFile(type: string, filename: string) {
   let steps: PluginStep[] = [];
@@ -10,11 +10,11 @@ export default async function codeFile(type: string, filename: string) {
 
   if (type === 'plugin') {
     while (true) {
-      const step = await getPluginStep();
+      const step = (await getPluginStep()) as PluginStep;
 
       steps.push(step);
 
-      const moreSteps = await prompt(
+      const moreSteps = await prompts(
         {
           type: 'confirm',
           name: 'again',
@@ -26,15 +26,15 @@ export default async function codeFile(type: string, filename: string) {
       }
     }
   } else {
-    const workflow = await prompt(
+    const workflow = await prompts(
       [
         {
-          type: 'input',
+          type: 'text',
           name: 'name',
           message: 'enter friendly name:'
         },
         {
-          type: 'input',
+          type: 'text',
           name: 'group',
           message: 'enter workflow activity group name:'
         }
@@ -53,46 +53,46 @@ export default async function codeFile(type: string, filename: string) {
   }
 }
 
-function getPluginStep(): Promise<PluginStep> {
+function getPluginStep(): Promise<prompts.Answers<string>> {
   console.log('\r\nenter plugin step options');
 
-  const questions: QuestionCollection<PluginStep> = [
+  const questions: prompts.PromptObject[] = [
     {
-      type: 'input',
+      type: 'text',
       name: 'name',
       message: 'enter step name:'
     },
     {
-      type: 'input',
+      type: 'text',
       name: 'message',
       message: 'enter message (Create, Update, etc):'
     },
     {
-      type: 'input',
+      type: 'text',
       name: 'entity',
       message: 'enter entity logical name (use \'none\' if not for a specific entity):'
     },
     {
-      type: 'input',
+      type: 'text',
       name: 'configuration',
       message: 'enter unsecure configuration:'
     },
     {
-      type: 'input',
+      type: 'text',
       name: 'description',
       message: 'enter description:'
     },
     {
-      type: 'list',
+      type: 'select',
       name: 'mode',
       message: 'select mode:',
       choices: [
         {
-          name: 'Synchronous',
+          title: 'Synchronous',
           value: 0
         },
         {
-          name: 'Asynchronous',
+          title: 'Asynchronous',
           value: 1
         }
       ]
@@ -101,56 +101,55 @@ function getPluginStep(): Promise<PluginStep> {
       type: 'number',
       name: 'rank',
       message: 'enter step rank:',
-      default: 1
+      initial: 1
     },
     {
-      type: 'list',
+      type: 'select',
       name: 'stage',
       message: 'select stage:',
       choices: [
         {
-          name: 'Pre-validation',
+          title: 'Pre-validation',
           value: 10
         },
         {
-          name: 'Pre-operation',
+          title: 'Pre-operation',
           value: 20
         },
         {
-          name: 'Post-operation',
+          title: 'Post-operation',
           value: 40
         }
       ]
     },
     {
-      type: 'list',
+      type: 'select',
       name: 'supporteddeployment',
       message: 'select deployment:',
       choices: [
         {
-          name: 'Server Only',
+          title: 'Server Only',
           value: 0
         },
         {
-          name: 'Microsoft Dynamics 365 Client for Outlook Only',
+          title: 'Microsoft Dynamics 365 Client for Outlook Only',
           value: 1
         },
         {
-          name: 'Both',
+          title: 'Both',
           value: 2
         }
       ],
-      default: 0
+      initial: 0
     },
     {
-      type: 'input',
+      type: 'text',
       name: 'filteringattributes',
       message: 'enter filtering attributes as comma separated list:'
-    },
-
+    }
   ];
 
-  return prompt(questions);
+  return prompts(questions);
 }
 
 async function write(type: string, filename: string, steps: PluginStep[], workflow?: { name?: string, group?: string }) {

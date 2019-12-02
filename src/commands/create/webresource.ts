@@ -1,226 +1,216 @@
-import { prompt, QuestionCollection } from 'inquirer';
 import * as fs from 'fs';
 import * as path from 'path';
 import * as spawn from 'cross-spawn';
+import prompts = require('prompts');
 
 interface WebResourceConfig {
-    username: string;
-    password: string;
-    clientId: string;
-    clientSecret: string;
-    solution: string;
-    tenant: string;
-    server: string;
-    namespace: string;
-    package: string;
-    authType: string;
+  username: string;
+  password: string;
+  clientId: string;
+  clientSecret: string;
+  solution: string;
+  tenant: string;
+  server: string;
+  namespace: string;
+  package: string;
+  authType: string;
 }
 
 export default async function webresource() {
-    const config = await getConfig();
+  const config = (await getConfig()) as WebResourceConfig;
 
-    write(config);
+  write(config);
 
-    if (process.env.JEST_WORKER_ID === undefined) {
-        install(config);
-    }
+  if (process.env.JEST_WORKER_ID === undefined) {
+    install(config);
+  }
 
-    console.log();
-    console.log('web resource project created');
-    console.log();
+  console.log();
+  console.log('web resource project created');
+  console.log();
 }
 
-function getConfig(): Promise<WebResourceConfig> {
-    console.log();
-    console.log('enter web resource project configuration:');
-    console.log();
+function getConfig(): Promise<prompts.Answers<string>> {
+  console.log();
+  console.log('enter web resource project configuration:');
+  console.log();
 
-    const questions: QuestionCollection<WebResourceConfig> = [
+  const questions: prompts.PromptObject[] = [
+    {
+      type: 'text',
+      name: 'namespace',
+      message: 'namespace for form and ribbon scripts:'
+    },
+    {
+      type: 'select',
+      name: 'package',
+      message: 'select package manager:',
+      initial: 0,
+      choices: [
         {
-            type: 'input',
-            name: 'namespace',
-            message: 'namespace for form and ribbon scripts:'
+          title: 'NPM',
+          value: 'npm'
         },
         {
-            type: 'list',
-            name: 'package',
-            message: 'select package manager:',
-            default: 'npm',
-            choices: [
-                {
-                    name: 'NPM',
-                    value: 'npm'
-                },
-                {
-                    name: 'Yarn',
-                    value: 'yarn'
-                }
-            ]
-        },
-        {
-            type: 'input',
-            name: 'server',
-            message: 'enter dynamics 365 url (https://org.crm.dynamics.com):'
-        },
-        {
-            type: 'input',
-            name: 'tenant',
-            message: 'enter tenant (org.onmicrosoft.com):'
-        },
-        {
-            type: 'list',
-            name: 'authType',
-            message: 'select authentication method:',
-            choices: [
-                {
-                    name: 'username/password',
-                    value: 'user'
-                },
-                {
-                    name: 'client id/client secret',
-                    value: 'client'
-                }
-            ]
-        },
-        {
-            type: 'input',
-            name: 'username',
-            message: 'enter dynamics 365 username:',
-            when: (config: WebResourceConfig) => {
-                return config.authType === 'user'
-            }
-        },
-        {
-            type: 'password',
-            name: 'password',
-            message: 'enter dynamics 365 password:',
-            when: (config: WebResourceConfig) => {
-                return config.authType === 'user'
-            }
-        },
-        {
-            type: 'password',
-            name: 'clientId',
-            message: 'enter client id:',
-            when: (config: WebResourceConfig) => {
-                return config.authType === 'client'
-            }
-        },
-        {
-            type: 'password',
-            name: 'clientSecret',
-            message: 'enter client secret:',
-            when: (config: WebResourceConfig) => {
-                return config.authType === 'client'
-            }
-        },
-        {
-            type: 'input',
-            name: 'solution',
-            message: 'dynamics 365 solution unique name:'
+          title: 'Yarn',
+          value: 'yarn'
         }
-    ];
+      ]
+    },
+    {
+      type: 'text',
+      name: 'server',
+      message: 'enter dynamics 365 url (https://org.crm.dynamics.com):'
+    },
+    {
+      type: 'text',
+      name: 'tenant',
+      message: 'enter tenant (org.onmicrosoft.com):'
+    },
+    {
+      type: 'select',
+      name: 'authType',
+      message: 'select authentication method:',
+      choices: [
+        {
+          title: 'username/password',
+          value: 'user'
+        },
+        {
+          title: 'client id/client secret',
+          value: 'client'
+        }
+      ]
+    },
+    {
+      type: (prev: any, values: any) => values.authType === 'user' ? 'text' : null,
+      name: 'username',
+      message: 'enter dynamics 365 username:'
+    },
+    {
+      type: (prev: any, values: any) => values.authType === 'user' ? 'password' : null,
+      name: 'password',
+      message: 'enter dynamics 365 password:'
+    },
+    {
+      type: (prev: any, values: any) => values.authType === 'client' ? 'password' : null,
+      name: 'clientId',
+      message: 'enter client id:'
+    },
+    {
+      type: (prev: any, values: any) => values.authType === 'client' ? 'password' : null,
+      name: 'clientSecret',
+      message: 'enter client secret:'
+    },
+    {
+      type: 'text',
+      name: 'solution',
+      message: 'dynamics 365 solution unique name:'
+    }
+  ];
 
-    return prompt(questions);
+  return prompts(questions);
 }
 
 function write(config: WebResourceConfig) {
-    let destinationPath = process.cwd();
-    let templatePath = path.resolve(__dirname, 'templates', 'webresource');
+  let destinationPath = process.cwd();
+  let templatePath = path.resolve(__dirname, 'templates', 'webresource');
 
-    console.log();
-    console.log('add web resource project files');
-    console.log();
+  console.log();
+  console.log('add web resource project files');
+  console.log();
 
-    // Write files
-    if (config.package === 'npm') {
-      fs.copyFileSync(path.resolve(templatePath, 'package.json'), path.resolve(destinationPath, 'package.json'));
-    } else {
-      fs.copyFileSync(path.resolve(templatePath, 'package.yarn.json'), path.resolve(destinationPath, 'package.json'));
-    }
+  // Write files
+  if (config.package === 'npm') {
+    fs.copyFileSync(path.resolve(templatePath, 'package.json'), path.resolve(destinationPath, 'package.json'));
+  } else {
+    fs.copyFileSync(path.resolve(templatePath, 'package.yarn.json'), path.resolve(destinationPath, 'package.json'));
+  }
 
-    fs.copyFileSync(path.resolve(templatePath, 'config.json'), path.resolve(destinationPath, 'config.json'));
-    fs.copyFileSync(path.resolve(templatePath, 'tsconfig.json'), path.resolve(destinationPath, 'tsconfig.json'));
-    fs.copyFileSync(path.resolve(templatePath, '.babelrc'), path.resolve(destinationPath, '.babelrc'));
-    fs.copyFileSync(path.resolve(templatePath, 'browserslist'), path.resolve(destinationPath, 'browserslist'));
+  fs.copyFileSync(path.resolve(templatePath, 'config.json'), path.resolve(destinationPath, 'config.json'));
+  fs.copyFileSync(path.resolve(templatePath, 'tsconfig.json'), path.resolve(destinationPath, 'tsconfig.json'));
+  fs.copyFileSync(path.resolve(templatePath, '.babelrc'), path.resolve(destinationPath, '.babelrc'));
+  fs.copyFileSync(path.resolve(templatePath, 'browserslist'), path.resolve(destinationPath, 'browserslist'));
 
-    // Add namespace to webpack config
-    let content: string = fs.readFileSync(path.resolve(templatePath, 'webpack.config.js'), 'utf8');
+  // Add namespace to webpack config
+  let content: string = fs.readFileSync(path.resolve(templatePath, 'webpack.config.js'), 'utf8');
 
-    content = content.replace('<%= namespace %>', config.namespace);
+  content = content.replace('<%= namespace %>', config.namespace);
 
-    fs.writeFileSync(path.resolve(destinationPath, 'webpack.config.js'), content);
+  fs.writeFileSync(path.resolve(destinationPath, 'webpack.config.js'), content);
 
-    // Write creds.json
-    const credConfig = {
-        server: config.server,
-        username: config.username,
-        password: config.password,
-        clientId: config.clientId,
-        clientSecret: config.clientSecret,
-        solution: config.solution,
-        tenant: config.tenant
-    };
+  // Write creds.json
+  const credConfig = {
+    server: config.server,
+    username: config.username,
+    password: config.password,
+    clientId: config.clientId,
+    clientSecret: config.clientSecret,
+    solution: config.solution,
+    tenant: config.tenant
+  };
 
-    fs.writeFileSync(path.resolve(destinationPath, 'creds.json'), JSON.stringify(credConfig));
+  fs.writeFileSync(path.resolve(destinationPath, 'creds.json'), JSON.stringify(credConfig));
 
-    if (fs.existsSync(path.resolve(destinationPath, '.gitignore'))) {
-      fs.appendFileSync(path.resolve(destinationPath, '.gitignore'), 'creds.json');
-    }
+  if (fs.existsSync(path.resolve(destinationPath, '.gitignore'))) {
+    fs.appendFileSync(path.resolve(destinationPath, '.gitignore'), 'creds.json');
+  }
 }
 
 function install(config: WebResourceConfig) {
-    const command = config.package === 'npm' ? 'install' : 'add';
+  const command = config.package === 'npm' ? 'install' : 'add';
 
-    // Run npm install
-    const base = [
-        command,
-        '@types/xrm',
-        'typescript',
-        'ts-lint',
-        'd365-common',
-        'xrm-webapi',
-        'webpack-event-plugin',
-        'source-map-loader',
-        'webpack',
-        'babel-loader',
-        'ts-loader',
-        'webpack-cli',
-        '@babel/core',
-        '@babel/preset-env',
-        '@babel/preset-typescript',
-        'xrm-mock',
-        'jest',
-        'ts-jest',
-        '@types/jest',
-        '-D'
-    ];
+  // Run npm install
+  const base = [
+    command,
+    '@types/xrm',
+    'typescript',
+    'ts-lint',
+    'd365-common',
+    'xrm-webapi',
+    'webpack-event-plugin',
+    'source-map-loader',
+    'webpack',
+    'babel-loader',
+    'ts-loader',
+    'webpack-cli',
+    '@babel/core',
+    '@babel/preset-env',
+    '@babel/preset-typescript',
+    'xrm-mock',
+    'jest',
+    'ts-jest',
+    '@types/jest',
+    '-D'
+  ];
 
-    const coreJs = [
-        command,
-        'core-js',
-        'regenerator-runtime'
-    ];
+  const coreJs = [
+    command,
+    'core-js',
+    'regenerator-runtime'
+  ];
 
-    console.log('install base packages');
-    console.log();
+  console.log('install base packages');
+  console.log();
 
-    spawn.sync(config.package, base, {
-        cwd: process.cwd(),
-        stdio: 'inherit'
-    });
+  spawn.sync(config.package, base, {
+    cwd: process.cwd(),
+    stdio: 'inherit'
+  });
 
-    spawn.sync(config.package, coreJs, {
-        cwd: process.cwd(),
-        stdio: 'inherit'
-    });
+  spawn.sync(config.package, coreJs, {
+    cwd: process.cwd(),
+    stdio: 'inherit'
+  });
 
-    const jestConfig = config.package === 'npm'
-      ? ['npx', 'ts-jest', 'config:init' ]
-      : [ 'yarn', 'ts-jest', 'config:init' ];
+  console.log('initialize ts-jest');
 
-    spawn.sync(config.package, jestConfig, {
-      cwd: process.cwd(),
-      stdio: 'inherit'
-    });
+  const jestConfig = ['ts-jest', 'config:init'];
+
+  const jestCommand = config.package === 'npm' ? 'npx' : 'yarn';
+
+  spawn.sync(jestCommand, jestConfig, {
+    cwd: process.cwd(),
+    stdio: 'inherit'
+  });
 }
