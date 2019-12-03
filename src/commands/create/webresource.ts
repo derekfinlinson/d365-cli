@@ -174,6 +174,8 @@ function install(config: WebResourceConfig) {
     'babel-loader',
     'ts-loader',
     'webpack-cli',
+    'clean-webpack-plugin',
+    'copy-webpack-plugin',
     '@babel/core',
     '@babel/preset-env',
     '@babel/preset-typescript',

@@ -1,9 +1,12 @@
 const WebpackEventPlugin = require("webpack-event-plugin");
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
+
 const spawn = require('cross-spawn');
 const config = require("./config.json");
 const path = require("path");
 
-module.exports = function(env) {
+module.exports = function (env) {
   let webpackConfig = {
     entry: config.entries,
 
@@ -38,6 +41,13 @@ module.exports = function(env) {
     },
 
     plugins: [
+      new CleanWebpackPlugin(),
+      new CopyWebpackPlugin([
+        {
+          context: "./src",
+          from: "**/*.html"
+        }
+      ]),
       new WebpackEventPlugin([
         {
           hook: "afterEmit",
