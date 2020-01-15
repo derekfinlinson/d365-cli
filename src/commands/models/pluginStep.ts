@@ -56,7 +56,7 @@ export async function deployStep(step: PluginStep, solution: string, apiConfig: 
 
     if (solution != undefined) {
       try {
-        await addToSolution(stepId, solution, ComponentType.PluginType, apiConfig);
+        await addToSolution(stepId, solution, ComponentType.SDKMessageProcessingStep, apiConfig);
       } catch (error) {
         console.error(`failed to add to solution: ${error.message}`);
       }
