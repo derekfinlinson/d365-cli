@@ -38,22 +38,22 @@
   "homepage": "https://github.com/derekfinlinson/d365-cli#readme",
   "dependencies": {
     "adal-node": "^0.2.1",
-    "commander": "^3.0.1",
-    "cross-spawn": "^7.0.0",
-    "glob": "^7.1.4",
-    "prompts": "^2.3.0",
+    "commander": "^5.0.0",
+    "cross-spawn": "^7.0.1",
+    "glob": "^7.1.6",
+    "prompts": "^2.3.2",
     "xrm-webapi": "^7.0.0"
   },
   "devDependencies": {
-    "@types/cross-spawn": "^6.0.0",
-    "@types/jest": "^24.0.18",
-    "@types/node": "^12.7.5",
-    "@types/prompts": "^2.0.3",
-    "cz-conventional-changelog": "^3.0.2",
-    "jest": "^24.9.0",
-    "semantic-release": "^15.13.24",
-    "ts-jest": "^24.1.0",
-    "typescript": "^3.6.3"
+    "@types/cross-spawn": "^6.0.1",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.32",
+    "@types/prompts": "^2.0.5",
+    "cz-conventional-changelog": "^3.1.0",
+    "jest": "^25.2.4",
+    "semantic-release": "^17.0.4",
+    "ts-jest": "^25.3.0",
+    "typescript": "^3.8.3"
   },
   "jest": {
     "transform": {

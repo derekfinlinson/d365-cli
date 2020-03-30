@@ -1,5 +1,5 @@
 const WebpackEventPlugin = require("webpack-event-plugin");
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const spawn = require('cross-spawn');
