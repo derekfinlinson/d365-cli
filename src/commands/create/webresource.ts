@@ -9,7 +9,6 @@ interface WebResourceConfig {
   clientId: string;
   clientSecret: string;
   solution: string;
-  tenant: string;
   server: string;
   namespace: string;
   package: string;
@@ -61,11 +60,6 @@ function getConfig(): Promise<prompts.Answers<string>> {
       type: 'text',
       name: 'server',
       message: 'enter dynamics 365 url (https://org.crm.dynamics.com):'
-    },
-    {
-      type: 'text',
-      name: 'tenant',
-      message: 'enter tenant (org.onmicrosoft.com):'
     },
     {
       type: 'select',
@@ -146,8 +140,7 @@ function write(config: WebResourceConfig) {
     password: config.password,
     clientId: config.clientId,
     clientSecret: config.clientSecret,
-    solution: config.solution,
-    tenant: config.tenant
+    solution: config.solution
   };
 
   fs.writeFileSync(path.resolve(destinationPath, 'creds.json'), JSON.stringify(credConfig));

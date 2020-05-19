@@ -1,6 +1,6 @@
 {
   "name": "d365-cli",
-  "version": "0.0.0-development",
+  "version": "2.10.1",
   "description": "Command line interface for Dynamics 365 development project scaffolding",
   "bin": {
     "d365": "./dist/index.js"
@@ -9,13 +9,14 @@
     "dist"
   ],
   "scripts": {
-    "semantic-release": "semantic-release --no-ci",
-    "commit": "git-cz",
     "build": "tsc && npm run copy-templates && npm run copy-sn",
     "dev": "tsc -w",
     "copy-templates": "cp -r ./src/commands/add/templates ./dist/commands/add && cp -r ./src/commands/create/templates ./dist/commands/create",
     "copy-sn": "cp ./src/commands/create/sn.exe ./dist/commands/create && cp ./src/commands/create/sn.exe.config ./dist/commands/create",
-    "test": "jest"
+    "test": "jest",
+    "change": "beachball change",
+    "check": "beachball check",
+    "beachball:publish": "beachball publish"
   },
   "repository": {
     "type": "git",
@@ -50,7 +51,7 @@
     "@types/jest": "^24.9.1",
     "@types/node": "^12.12.34",
     "@types/prompts": "^2.0.5",
-    "cz-conventional-changelog": "^3.1.0",
+    "beachball": "^1.31.0",
     "jest": "^25.2.7",
     "semantic-release": "^17.0.4",
     "ts-jest": "^25.3.1",
@@ -68,10 +69,5 @@
       "json",
       "jsx"
     ]
-  },
-  "config": {
-    "commitizen": {
-      "path": "./node_modules/cz-conventional-changelog"
-    }
   }
 }

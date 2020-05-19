@@ -14,7 +14,6 @@ interface AssemblyConfig {
   clientId: string;
   clientSecret: string;
   solution: string;
-  tenant: string;
   server: string;
   authType: string;
   xrmVersion?: string;
@@ -122,11 +121,6 @@ function getConfig(type: string, versions: string[]): Promise<prompts.Answers<st
       message: 'enter dynamics 365 url (https://org.crm.dynamics.com):'
     },
     {
-      type: 'text',
-      name: 'tenant',
-      message: 'enter tenant (org.onmicrosoft.com):'
-    },
-    {
       type: 'select',
       name: 'authType',
       message: 'select authentication method:',
@@ -202,8 +196,7 @@ function write(type: string, config: AssemblyConfig) {
     password: config.password,
     clientId: config.clientId,
     clientSecret: config.clientSecret,
-    solution: config.solution,
-    tenant: config.tenant
+    solution: config.solution
   };
 
   fs.writeFileSync(path.resolve(destinationPath, 'creds.json'), JSON.stringify(credConfig));

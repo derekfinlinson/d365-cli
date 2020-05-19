@@ -1,4 +1,4 @@
-import * as inquirer from "inquirer";
+import prompts from 'prompts';
 import webresource from '../src/commands/create/webresource';
 import * as fs from 'fs';
 import * as path from 'path';
@@ -8,111 +8,107 @@ jest.mock('inquirer');
 const projectPath = path.resolve(__dirname, '__create__');
 
 beforeEach(() => {
-    fs.mkdirSync(projectPath);
-    process.chdir(projectPath);
+  fs.mkdirSync(projectPath);
+  process.chdir(projectPath);
 });
 
 afterEach(() => {
-    fs.readdirSync(projectPath).forEach(f => {
-        fs.unlinkSync(path.resolve(projectPath, f));
-    });
+  fs.readdirSync(projectPath).forEach(f => {
+    fs.unlinkSync(path.resolve(projectPath, f));
+  });
 
-    process.chdir(path.resolve(__dirname));
-    fs.rmdirSync(projectPath);
+  process.chdir(path.resolve(__dirname));
+  fs.rmdirSync(projectPath);
 });
 
 describe('create a web resource project', () => {
-    test('creates project with user authentication', async () => {
-        const answers = {
-            namespace: 'Org',
-            package: 'npm',
-            server: 'https://org.crm.dynamics.com',
-            tenant: 'org.onmicrosoft.com',
-            authType: 'user',
-            username: 'user@org.onmicrosoft.com',
-            password: 'password',
-            solution: 'D365Solution'
-        };
+  test('creates project with user authentication', async () => {
+    const answers = {
+      namespace: 'Org',
+      package: 'npm',
+      server: 'https://org.crm.dynamics.com',
+      authType: 'user',
+      username: 'user@org.onmicrosoft.com',
+      password: 'password',
+      solution: 'D365Solution'
+    };
 
-        const prompt = jest.spyOn(inquirer, 'prompt');
+    const prompt = jest.spyOn(prompts, 'prompt');
 
-        prompt.mockResolvedValue(answers);
+    prompt.mockResolvedValue(answers);
 
-        await webresource();
+    await webresource();
 
-        const expectedFiles = [
-            'package.json',
-            'config.json',
-            'tsconfig.json',
-            '.babelrc',
-            'webpack.config.js',
-            'creds.json'
-        ];
+    const expectedFiles = [
+      'package.json',
+      'config.json',
+      'tsconfig.json',
+      '.babelrc',
+      'webpack.config.js',
+      'creds.json'
+    ];
 
-        expectedFiles.forEach(f => {
-            expect(fs.existsSync(path.resolve(projectPath, f))).toBeTruthy();
-        });
-
-        const webpackContent = fs.readFileSync(path.resolve(projectPath, 'webpack.config.js'), 'utf8');
-
-        expect(webpackContent).toContain(answers.namespace);
-
-        const credsContent = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'creds.json'), 'utf8'));
-
-        expect(credsContent.server).toBe(answers.server);
-        expect(credsContent.username).toBe(answers.username);
-        expect(credsContent.password).toBe(answers.password);
-        expect(credsContent.solution).toBe(answers.solution);
-        expect(credsContent.tenant).toBe(answers.tenant);
+    expectedFiles.forEach(f => {
+      expect(fs.existsSync(path.resolve(projectPath, f))).toBeTruthy();
     });
 
-    test('creates project with client id/secret authentication', async () => {
-        const answers = {
-            namespace: 'Jt',
-            package: 'npm',
-            server: 'https://org.crm.dynamics.com',
-            tenant: 'org.onmicrosoft.com',
-            authType: 'client',
-            clientId: 'id',
-            clientSecret: 'secret',
-            solution: 'D365Solution'
-        };
+    const webpackContent = fs.readFileSync(path.resolve(projectPath, 'webpack.config.js'), 'utf8');
 
-        const prompt = jest.spyOn(inquirer, 'prompt');
+    expect(webpackContent).toContain(answers.namespace);
 
-        prompt.mockResolvedValue(answers);
+    const credsContent = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'creds.json'), 'utf8'));
 
-        await webresource();
+    expect(credsContent.server).toBe(answers.server);
+    expect(credsContent.username).toBe(answers.username);
+    expect(credsContent.password).toBe(answers.password);
+    expect(credsContent.solution).toBe(answers.solution);
+  });
 
-        const expectedFiles = [
-            'package.json',
-            'config.json',
-            'tsconfig.json',
-            '.babelrc',
-            'webpack.config.js',
-            'creds.json'
-        ];
+  test('creates project with client id/secret authentication', async () => {
+    const answers = {
+      namespace: 'Jt',
+      package: 'npm',
+      server: 'https://org.crm.dynamics.com',
+      authType: 'client',
+      clientId: 'id',
+      clientSecret: 'secret',
+      solution: 'D365Solution'
+    };
 
-        expectedFiles.forEach(f => {
-            expect(fs.existsSync(path.resolve(projectPath, f))).toBeTruthy();
-        });
+    const prompt = jest.spyOn(prompts, 'prompt');
 
-        const webpackContent = fs.readFileSync(path.resolve(projectPath, 'webpack.config.js'), 'utf8');
+    prompt.mockResolvedValue(answers);
 
-        expect(webpackContent).toContain(answers.namespace);
+    await webresource();
 
-        const credsContent = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'creds.json'), 'utf8'));
+    const expectedFiles = [
+      'package.json',
+      'config.json',
+      'tsconfig.json',
+      '.babelrc',
+      'webpack.config.js',
+      'creds.json'
+    ];
 
-        expect(credsContent.server).toBe(answers.server);
-        expect(credsContent.clientId).toBe(answers.clientId);
-        expect(credsContent.clientSecret).toBe(answers.clientSecret);
-        expect(credsContent.solution).toBe(answers.solution);
-        expect(credsContent.tenant).toBe(answers.tenant);
+    expectedFiles.forEach(f => {
+      expect(fs.existsSync(path.resolve(projectPath, f))).toBeTruthy();
     });
+
+    const webpackContent = fs.readFileSync(path.resolve(projectPath, 'webpack.config.js'), 'utf8');
+
+    expect(webpackContent).toContain(answers.namespace);
+
+    const credsContent = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'creds.json'), 'utf8'));
+
+    expect(credsContent.server).toBe(answers.server);
+    expect(credsContent.clientId).toBe(answers.clientId);
+    expect(credsContent.clientSecret).toBe(answers.clientSecret);
+    expect(credsContent.solution).toBe(answers.solution);
+  });
 });
 
 describe('create assembly project', () => {
-    test('create plugin project', () => {
+  test('create plugin project', () => {
 
-    });
+  });
 });

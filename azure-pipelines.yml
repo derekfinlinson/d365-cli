@@ -7,19 +7,32 @@ pool:
   vmImage: 'Ubuntu 16.04'
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
+  - task: NodeTool@0
+    inputs:
+      versionSpec: '10.x'
+    displayName: 'Install Node.js'
 
-- script: npm install
-  displayName: 'install NPM packages'
+  - script: |
+        git config user.email "dcfinlinson@gmail.com"
+        git config user.name "derekfinlinson"
+        git remote set-url origin https://$(github.user):$(github.pat)@github.com/derekfinlinson/d365-cli.git
+      displayName: 'git config'
 
-- script: npm run build
-  displayName: 'build project'
+  - script: npm install
+      displayName: 'install NPM packages'
+
+  - script: |
+        npm run check
+      displayName: 'check change files'
+      
+  - script: |
+        npm run build
+      displayName: 'build project'
   
-- script: npm run semantic-release
-  env:
-    NPM_TOKEN: $(NPM_TOKEN)
-    GH_TOKEN: $(GH_TOKEN)
-  displayName: 'deploy to npm'
+  - script: |
+      yarn test
+    displayName: 'test'
+
+- script: |
+      npm beachball:publish -n $(npm.authtoken) -y
+    displayName: 'beachball publish'
