@@ -27,7 +27,6 @@ describe('create a web resource project', () => {
             namespace: 'Org',
             package: 'npm',
             server: 'https://org.crm.dynamics.com',
-            tenant: 'org.onmicrosoft.com',
             authType: 'user',
             username: 'user@org.onmicrosoft.com',
             password: 'password',
@@ -63,7 +62,6 @@ describe('create a web resource project', () => {
         expect(credsContent.username).toBe(answers.username);
         expect(credsContent.password).toBe(answers.password);
         expect(credsContent.solution).toBe(answers.solution);
-        expect(credsContent.tenant).toBe(answers.tenant);
     });
 
     test('creates project with client id/secret authentication', async () => {
@@ -71,7 +69,6 @@ describe('create a web resource project', () => {
             namespace: 'Jt',
             package: 'npm',
             server: 'https://org.crm.dynamics.com',
-            tenant: 'org.onmicrosoft.com',
             authType: 'client',
             clientId: 'id',
             clientSecret: 'secret',
@@ -107,7 +104,6 @@ describe('create a web resource project', () => {
         expect(credsContent.clientId).toBe(answers.clientId);
         expect(credsContent.clientSecret).toBe(answers.clientSecret);
         expect(credsContent.solution).toBe(answers.solution);
-        expect(credsContent.tenant).toBe(answers.tenant);
     });
 });
 

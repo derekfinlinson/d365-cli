@@ -4,7 +4,6 @@ import { unboundAction } from 'xrm-webapi/dist/webapi-node';
 import { WebApiConfig } from 'xrm-webapi/dist/models';
 
 export interface DeployCredentials {
-  tenant: string;
   clientId?: string;
   clientSecret?: string;
   server: string;
@@ -16,9 +15,8 @@ export interface DeployCredentials {
 export function authenticate(creds: DeployCredentials): Promise<string> {
   return new Promise((resolve, reject) => {
     // authenticate
-    const authorityHostUrl: string = `https://login.windows.net/${creds.tenant}`;
-    const context = new AuthenticationContext(authorityHostUrl);
-    const clientId: string = creds.clientId || "c67c746f-9745-46eb-83bb-5742263736b7";
+    const context = new AuthenticationContext('https://login.microsoftonline.com/common');
+    const clientId: string = creds.clientId || 'c67c746f-9745-46eb-83bb-5742263736b7';
 
     // use client id/secret auth
     if (creds.clientSecret != null && creds.clientSecret !== "") {
