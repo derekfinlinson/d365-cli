@@ -1,0 +1,20 @@
+{
+  "name": "d365-cli",
+  "entries": [
+    {
+      "date": "Tue, 19 May 2020 20:14:42 GMT",
+      "tag": "d365-cli_v2.11.0",
+      "version": "2.11.0",
+      "comments": {
+        "minor": [
+          {
+            "comment": "Switch to using common tenant",
+            "author": "dcfinlinson@gmail.com",
+            "commit": "6760df3a5de38671d5ac9a124fcdc0aee5d27cf6",
+            "package": "d365-cli"
+          }
+        ]
+      }
+    }
+  ]
+}
