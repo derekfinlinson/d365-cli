@@ -3,8 +3,15 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/vsts/pipelines/languages/javascript
 
+pr: none
+
+trigger:
+  branches:
+    include:
+      - master
+
 pool:
-  vmImage: 'Ubuntu 16.04'
+  vmImage: 'Ubuntu-16.04'
 
 steps:
   - task: NodeTool@0
@@ -13,26 +20,22 @@ steps:
     displayName: 'Install Node.js'
 
   - script: |
-        git config user.email "dcfinlinson@gmail.com"
-        git config user.name "derekfinlinson"
-        git remote set-url origin https://$(github.user):$(github.pat)@github.com/derekfinlinson/d365-cli.git
-      displayName: 'git config'
-
-  - script: npm install
-      displayName: 'install NPM packages'
-
+      git config user.email "dcfinlinson@gmail.com"
+      git config user.name "Derek Finlinson"
+      git remote set-url origin https://$(github.user):$(github.pat)@github.com/derekfinlinson/d365-cli.git
+    displayName: 'git config'
   - script: |
-        npm run check
-      displayName: 'check change files'
-      
+      npm install
+    displayName: 'npm install'
   - script: |
-        npm run build
-      displayName: 'build project'
-  
+      npm run check
+    displayName: 'check change files'
   - script: |
-      yarn test
+      npm run build
+    displayName: 'build'
+  - script: |
+      npm run test
     displayName: 'test'
-
-- script: |
-      npm beachball:publish -n $(npm.authtoken) -y
+  - script: |
+      npm run beachball:publish -n $(npm.authtoken) -y
     displayName: 'beachball publish'
