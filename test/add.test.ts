@@ -1,4 +1,4 @@
-import * as inquirer from "inquirer";
+import prompts from 'prompts';
 import resourceFile from '../src/commands/add/resourceFile';
 import script from '../src/commands/add/script';
 import testScript from '../src/commands/add/test-script';
@@ -41,7 +41,7 @@ describe('add resource files', () => {
             displayName: 'Style.css'
         };
 
-        const prompt = jest.spyOn(inquirer, 'prompt');
+        const prompt = jest.spyOn(prompts, 'prompt');
 
         prompt.mockResolvedValue(answers);
 
@@ -63,7 +63,7 @@ describe('add resource files', () => {
             displayName: 'Style.html'
         };
 
-        const prompt = jest.spyOn(inquirer, 'prompt');
+        const prompt = jest.spyOn(prompts, 'prompt');
 
         prompt.mockResolvedValue(answers);
 
@@ -91,7 +91,7 @@ describe('add script files', () => {
             test: false
         };
 
-        const prompt = jest.spyOn(inquirer, 'prompt');
+        const prompt = jest.spyOn(prompts, 'prompt');
 
         prompt.mockResolvedValue(answers);
 
@@ -117,7 +117,7 @@ describe('add script files', () => {
             test: true
         };
 
-        const prompt = jest.spyOn(inquirer, 'prompt');
+        const prompt = jest.spyOn(prompts, 'prompt');
 
         prompt.mockResolvedValue(answers);
 
@@ -148,7 +148,7 @@ describe('add script files', () => {
             test: false
         };
 
-        const prompt = jest.spyOn(inquirer, 'prompt');
+        const prompt = jest.spyOn(prompts, 'prompt');
 
         prompt.mockResolvedValue(answers);
 
@@ -174,7 +174,7 @@ describe('add script files', () => {
             test: true
         };
 
-        const prompt = jest.spyOn(inquirer, 'prompt');
+        const prompt = jest.spyOn(prompts, 'prompt');
 
         prompt.mockResolvedValue(answers);
 
