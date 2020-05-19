@@ -1,8 +1,0 @@
-{
-  "type": "minor",
-  "comment": "Switch to beachball and common tenant",
-  "packageName": "d365-cli",
-  "email": "dcfinlinson@gmail.com",
-  "dependentChangeType": "patch",
-  "date": "2020-05-19T18:19:39.177Z"
-}
