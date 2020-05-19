@@ -5,8 +5,6 @@ import testScript from '../src/commands/add/test-script';
 import * as fs from 'fs';
 import * as path from 'path';
 
-jest.mock('inquirer');
-
 const projectPath = path.resolve(__dirname, '__add__');
 
 beforeEach(() => {
@@ -36,14 +34,12 @@ afterEach(() => {
 
 describe('add resource files', () => {
     test('add css file', async () => {
-        const answers = {
-            name: 'new_style.css',
-            displayName: 'Style.css'
-        };
+        const answers = [
+            'new_style.css',
+            'Style.css'
+        ];
 
-        const prompt = jest.spyOn(prompts, 'prompt');
-
-        prompt.mockResolvedValue(answers);
+        prompts.inject(answers);
 
         await resourceFile('style', 'css');
 
@@ -52,20 +48,16 @@ describe('add resource files', () => {
         const config = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'config.json'), 'utf8'));
 
         expect(config.webResources[0].path).toBe('./dist/css/style.css');
-        expect(config.webResources[0].name).toBe(answers.name);
-        expect(config.webResources[0].displayname).toBe(answers.displayName);
+        expect(config.webResources[0].name).toBe(answers[0]);
+        expect(config.webResources[0].displayname).toBe(answers[1]);
         expect(config.webResources[0].type).toBe('CSS');
     });
 
     test('add html file', async () => {
-        const answers = {
-            name: 'new_index.html',
-            displayName: 'Style.html'
-        };
-
-        const prompt = jest.spyOn(prompts, 'prompt');
-
-        prompt.mockResolvedValue(answers);
+        const answers = [
+            'new_index.html',
+            'Style.html'
+        ];
 
         await resourceFile('index', 'html');
 
@@ -74,8 +66,8 @@ describe('add resource files', () => {
         const config = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'config.json'), 'utf8'));
 
         expect(config.webResources[0].path).toBe('./dist/html/index.html');
-        expect(config.webResources[0].name).toBe(answers.name);
-        expect(config.webResources[0].displayname).toBe(answers.displayName);
+        expect(config.webResources[0].name).toBe(answers[0]);
+        expect(config.webResources[0].displayname).toBe(answers[1]);
         expect(config.webResources[0].type).toBe('HTML');
     });
 
@@ -84,16 +76,14 @@ describe('add resource files', () => {
 
 describe('add script files', () => {
     test('add form script file without test', async () => {
-        const answers = {
-            type: 'form',
-            name: 'new_script.js',
-            displayName: 'Script.js',
-            test: false
-        };
+        const answers = [
+            'form',
+            'new_script.js',
+            'Script.js',
+            false
+        ];
 
-        const prompt = jest.spyOn(prompts, 'prompt');
-
-        prompt.mockResolvedValue(answers);
+        prompts.inject(answers);
 
         await script('Form');
 
@@ -102,24 +92,22 @@ describe('add script files', () => {
         const config = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'config.json'), 'utf8'));
 
         expect(config.webResources[0].path).toBe('./dist/scripts/Form.js');
-        expect(config.webResources[0].name).toBe(answers.name);
-        expect(config.webResources[0].displayname).toBe(answers.displayName);
+        expect(config.webResources[0].name).toBe(answers[0]);
+        expect(config.webResources[0].displayname).toBe(answers[1]);
         expect(config.webResources[0].type).toBe('JavaScript');
 
         expect(fs.existsSync(path.resolve(projectPath, 'test', 'scripts', 'form.test.ts'))).toBeFalsy();
     });
 
     test('add form script file with test', async () => {
-        const answers = {
-            type: 'form',
-            name: 'new_script.js',
-            displayName: 'Script.js',
-            test: true
-        };
+        const answers = [
+            'form',
+            'new_script.js',
+            'Script.js',
+            true
+        ];
 
-        const prompt = jest.spyOn(prompts, 'prompt');
-
-        prompt.mockResolvedValue(answers);
+        prompts.inject(answers);
 
         await script('Form');
 
@@ -128,8 +116,8 @@ describe('add script files', () => {
         const config = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'config.json'), 'utf8'));
 
         expect(config.webResources[0].path).toBe('./dist/scripts/Form.js');
-        expect(config.webResources[0].name).toBe(answers.name);
-        expect(config.webResources[0].displayname).toBe(answers.displayName);
+        expect(config.webResources[0].name).toBe(answers[0]);
+        expect(config.webResources[0].displayname).toBe(answers[1]);
         expect(config.webResources[0].type).toBe('JavaScript');
 
         expect(fs.existsSync(path.resolve(projectPath, 'test', 'scripts', 'Form.test.ts'))).toBeTruthy();
@@ -141,16 +129,14 @@ describe('add script files', () => {
     });
 
     test('add ribbon script file without test', async () => {
-        const answers = {
-            type: 'ribbon',
-            name: 'new_script.js',
-            displayName: 'Script.js',
-            test: false
-        };
+        const answers = [
+            'ribbon',
+            'new_script.js',
+            'Script.js',
+            false
+        ];
 
-        const prompt = jest.spyOn(prompts, 'prompt');
-
-        prompt.mockResolvedValue(answers);
+        prompts.inject(answers);
 
         await script('Ribbon');
 
@@ -159,24 +145,22 @@ describe('add script files', () => {
         const config = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'config.json'), 'utf8'));
 
         expect(config.webResources[0].path).toBe('./dist/scripts/Ribbon.js');
-        expect(config.webResources[0].name).toBe(answers.name);
-        expect(config.webResources[0].displayname).toBe(answers.displayName);
+        expect(config.webResources[0].name).toBe(answers[0]);
+        expect(config.webResources[0].displayname).toBe(answers[1]);
         expect(config.webResources[0].type).toBe('JavaScript');
 
         expect(fs.existsSync(path.resolve(projectPath, 'test', 'scripts', 'Ribbon.test.ts'))).toBeFalsy();
     });
 
     test('add ribbon script file with test', async () => {
-        const answers = {
-            type: 'ribbon',
-            name: 'new_script.js',
-            displayName: 'Script.js',
-            test: true
-        };
-
-        const prompt = jest.spyOn(prompts, 'prompt');
-
-        prompt.mockResolvedValue(answers);
+        const answers = [
+            'ribbon',
+            'new_script.js',
+            'Script.js',
+            true
+        ];
+       
+        prompts.inject(answers);
 
         await script('Ribbon');
 
@@ -185,8 +169,8 @@ describe('add script files', () => {
         const config = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'config.json'), 'utf8'));
 
         expect(config.webResources[0].path).toBe('./dist/scripts/Ribbon.js');
-        expect(config.webResources[0].name).toBe(answers.name);
-        expect(config.webResources[0].displayname).toBe(answers.displayName);
+        expect(config.webResources[0].name).toBe(answers[0]);
+        expect(config.webResources[0].displayname).toBe(answers[1]);
         expect(config.webResources[0].type).toBe('JavaScript');
 
         expect(fs.existsSync(path.resolve(projectPath, 'test', 'scripts', 'Ribbon.test.ts'))).toBeTruthy();

@@ -1,6 +1,6 @@
 import * as fs from 'fs';
 import * as path from 'path';
-import prompts = require('prompts');
+import prompts from 'prompts';
 
 interface FileConfig {
     name: string;

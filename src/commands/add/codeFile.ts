@@ -2,7 +2,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { PluginAssembly } from '../models/pluginAssembly';
 import { PluginStep } from '../models/pluginStep';
-import prompts = require('prompts');
+import prompts from 'prompts';
 
 export default async function codeFile(type: string, filename: string) {
   let steps: PluginStep[] = [];

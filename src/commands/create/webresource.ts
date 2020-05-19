@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as spawn from 'cross-spawn';
-import prompts = require('prompts');
+import prompts from 'prompts';
 
 interface WebResourceConfig {
   username: string;

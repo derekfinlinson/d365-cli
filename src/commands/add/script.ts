@@ -1,7 +1,7 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import test from './test-script';
-import prompts = require('prompts');
+import prompts from 'prompts';
 
 interface ScriptConfig {
   name: string;

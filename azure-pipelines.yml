@@ -27,8 +27,5 @@ steps:
       npm run build
     displayName: 'build'
   - script: |
-      npm run test
-    displayName: 'test'
-  - script: |
       npm run beachball:publish -n $(npm.authtoken) -y
     displayName: 'beachball publish'

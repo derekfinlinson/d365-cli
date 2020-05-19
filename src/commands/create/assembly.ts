@@ -3,7 +3,7 @@ import * as path from "path";
 import * as https from "https";
 import * as spawn from 'cross-spawn';
 import { PluginAssembly } from '../models/pluginAssembly';
-import prompts = require("prompts");
+import prompts from 'prompts';
 
 interface AssemblyConfig {
   sdkVersion: string;

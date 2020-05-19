@@ -3,8 +3,6 @@ import webresource from '../src/commands/create/webresource';
 import * as fs from 'fs';
 import * as path from 'path';
 
-jest.mock('inquirer');
-
 const projectPath = path.resolve(__dirname, '__create__');
 
 beforeEach(() => {
@@ -23,20 +21,18 @@ afterEach(() => {
 
 describe('create a web resource project', () => {
   test('creates project with user authentication', async () => {
-    const answers = {
-      namespace: 'Org',
-      package: 'npm',
-      server: 'https://org.crm.dynamics.com',
-      authType: 'user',
-      username: 'user@org.onmicrosoft.com',
-      password: 'password',
-      solution: 'D365Solution'
-    };
+    const answers = [
+      'Org',
+      'npm',
+      'https://org.crm.dynamics.com',
+      'user',
+      'user@org.onmicrosoft.com',
+      'password',
+      'D365Solution'
+    ];
 
-    const prompt = jest.spyOn(prompts, 'prompt');
-
-    prompt.mockResolvedValue(answers);
-
+    prompts.inject(answers);
+    
     await webresource();
 
     const expectedFiles = [
@@ -54,30 +50,28 @@ describe('create a web resource project', () => {
 
     const webpackContent = fs.readFileSync(path.resolve(projectPath, 'webpack.config.js'), 'utf8');
 
-    expect(webpackContent).toContain(answers.namespace);
+    expect(webpackContent).toContain(answers[0]);
 
     const credsContent = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'creds.json'), 'utf8'));
 
-    expect(credsContent.server).toBe(answers.server);
-    expect(credsContent.username).toBe(answers.username);
-    expect(credsContent.password).toBe(answers.password);
-    expect(credsContent.solution).toBe(answers.solution);
+    expect(credsContent.server).toBe(answers[1]);
+    expect(credsContent.username).toBe(answers[2]);
+    expect(credsContent.password).toBe(answers[3]);
+    expect(credsContent.solution).toBe(answers[4]);
   });
 
   test('creates project with client id/secret authentication', async () => {
-    const answers = {
-      namespace: 'Jt',
-      package: 'npm',
-      server: 'https://org.crm.dynamics.com',
-      authType: 'client',
-      clientId: 'id',
-      clientSecret: 'secret',
-      solution: 'D365Solution'
-    };
+    const answers = [
+      'Jt',
+      'npm',
+      'https://org.crm.dynamics.com',
+      'client',
+      'id',
+      'secret',
+      'D365Solution'
+    ];
 
-    const prompt = jest.spyOn(prompts, 'prompt');
-
-    prompt.mockResolvedValue(answers);
+    prompts.inject(answers);
 
     await webresource();
 
@@ -96,14 +90,14 @@ describe('create a web resource project', () => {
 
     const webpackContent = fs.readFileSync(path.resolve(projectPath, 'webpack.config.js'), 'utf8');
 
-    expect(webpackContent).toContain(answers.namespace);
+    expect(webpackContent).toContain(answers[0]);
 
     const credsContent = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'creds.json'), 'utf8'));
 
-    expect(credsContent.server).toBe(answers.server);
-    expect(credsContent.clientId).toBe(answers.clientId);
-    expect(credsContent.clientSecret).toBe(answers.clientSecret);
-    expect(credsContent.solution).toBe(answers.solution);
+    expect(credsContent.server).toBe(answers[1]);
+    expect(credsContent.clientId).toBe(answers[2]);
+    expect(credsContent.clientSecret).toBe(answers[3]);
+    expect(credsContent.solution).toBe(answers[4]);
   });
 });
 
