@@ -1,0 +1,8 @@
+{
+  "type": "minor",
+  "comment": "Switch to using common tenant",
+  "packageName": "d365-cli",
+  "email": "dcfinlinson@gmail.com",
+  "dependentChangeType": "patch",
+  "date": "2020-05-19T18:59:08.714Z"
+}
