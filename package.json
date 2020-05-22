@@ -1,6 +1,6 @@
 {
   "name": "d365-cli",
-  "version": "2.10.1",
+  "version": "2.11.0",
   "description": "Command line interface for Dynamics 365 development project scaffolding",
   "bin": {
     "d365": "./dist/index.js"
