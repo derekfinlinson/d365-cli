@@ -1,8 +1,0 @@
-{
-  "type": "patch",
-  "comment": "Commander upgrade",
-  "packageName": "d365-cli",
-  "email": "dcfinlinson@gmail.com",
-  "dependentChangeType": "patch",
-  "date": "2020-05-22T22:27:20.581Z"
-}
