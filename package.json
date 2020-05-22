@@ -39,7 +39,7 @@
   "homepage": "https://github.com/derekfinlinson/d365-cli#readme",
   "dependencies": {
     "adal-node": "^0.2.1",
-    "commander": "^5.0.0",
+    "commander": "^5.1.0",
     "cross-spawn": "^7.0.2",
     "glob": "^7.1.6",
     "prompts": "^2.3.2",
@@ -53,7 +53,6 @@
     "@types/prompts": "^2.0.5",
     "beachball": "^1.31.0",
     "jest": "^25.2.7",
-    "semantic-release": "^17.0.4",
     "ts-jest": "^25.3.1",
     "typescript": "^3.8.3"
   },

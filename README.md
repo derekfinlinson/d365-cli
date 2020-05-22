@@ -1,6 +1,6 @@
 # d365-cli
-|Build|NPM|Semantic-Release|
-|-----|---|----------------|
+|Build|NPM|
+|-----|---|
 |[![Build Status](https://derekfinlinson.visualstudio.com/GitHub/_apis/build/status/derekfinlinson.d365-cli)](https://derekfinlinson.visualstudio.com/GitHub/_build/latest?definitionId=5)|[![npm](https://img.shields.io/npm/v/d365-cli.svg?style=flat-square)](https://www.npmjs.com/package/d365-cli)|
 
 Dynamics 365 CLI for scaffolding development projects

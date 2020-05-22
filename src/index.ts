@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 
-"use strict";
-
-import * as program from 'commander';
+import { program } from 'commander';
 import add from './commands/add';
 import create from './commands/create';
 import deploy from './commands/deploy';

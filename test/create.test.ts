@@ -54,15 +54,15 @@ describe('create a web resource project', () => {
 
     const credsContent = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'creds.json'), 'utf8'));
 
-    expect(credsContent.server).toBe(answers[1]);
-    expect(credsContent.username).toBe(answers[2]);
-    expect(credsContent.password).toBe(answers[3]);
-    expect(credsContent.solution).toBe(answers[4]);
+    expect(credsContent.server).toBe(answers[2]);
+    expect(credsContent.username).toBe(answers[4]);
+    expect(credsContent.password).toBe(answers[5]);
+    expect(credsContent.solution).toBe(answers[6]);
   });
 
   test('creates project with client id/secret authentication', async () => {
     const answers = [
-      'Jt',
+      'Org',
       'npm',
       'https://org.crm.dynamics.com',
       'client',
@@ -94,10 +94,10 @@ describe('create a web resource project', () => {
 
     const credsContent = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'creds.json'), 'utf8'));
 
-    expect(credsContent.server).toBe(answers[1]);
-    expect(credsContent.clientId).toBe(answers[2]);
-    expect(credsContent.clientSecret).toBe(answers[3]);
-    expect(credsContent.solution).toBe(answers[4]);
+    expect(credsContent.server).toBe(answers[2]);
+    expect(credsContent.clientId).toBe(answers[4]);
+    expect(credsContent.clientSecret).toBe(answers[5]);
+    expect(credsContent.solution).toBe(answers[6]);
   });
 });
 

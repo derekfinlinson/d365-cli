@@ -59,6 +59,8 @@ describe('add resource files', () => {
             'Style.html'
         ];
 
+        prompts.inject(answers);
+        
         await resourceFile('index', 'html');
 
         expect(fs.existsSync(path.resolve(projectPath, 'src', 'html', 'index.html'))).toBeTruthy();
@@ -92,8 +94,8 @@ describe('add script files', () => {
         const config = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'config.json'), 'utf8'));
 
         expect(config.webResources[0].path).toBe('./dist/scripts/Form.js');
-        expect(config.webResources[0].name).toBe(answers[0]);
-        expect(config.webResources[0].displayname).toBe(answers[1]);
+        expect(config.webResources[0].name).toBe(answers[1]);
+        expect(config.webResources[0].displayname).toBe(answers[2]);
         expect(config.webResources[0].type).toBe('JavaScript');
 
         expect(fs.existsSync(path.resolve(projectPath, 'test', 'scripts', 'form.test.ts'))).toBeFalsy();
@@ -116,8 +118,8 @@ describe('add script files', () => {
         const config = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'config.json'), 'utf8'));
 
         expect(config.webResources[0].path).toBe('./dist/scripts/Form.js');
-        expect(config.webResources[0].name).toBe(answers[0]);
-        expect(config.webResources[0].displayname).toBe(answers[1]);
+        expect(config.webResources[0].name).toBe(answers[1]);
+        expect(config.webResources[0].displayname).toBe(answers[2]);
         expect(config.webResources[0].type).toBe('JavaScript');
 
         expect(fs.existsSync(path.resolve(projectPath, 'test', 'scripts', 'Form.test.ts'))).toBeTruthy();
@@ -145,8 +147,8 @@ describe('add script files', () => {
         const config = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'config.json'), 'utf8'));
 
         expect(config.webResources[0].path).toBe('./dist/scripts/Ribbon.js');
-        expect(config.webResources[0].name).toBe(answers[0]);
-        expect(config.webResources[0].displayname).toBe(answers[1]);
+        expect(config.webResources[0].name).toBe(answers[1]);
+        expect(config.webResources[0].displayname).toBe(answers[2]);
         expect(config.webResources[0].type).toBe('JavaScript');
 
         expect(fs.existsSync(path.resolve(projectPath, 'test', 'scripts', 'Ribbon.test.ts'))).toBeFalsy();
@@ -169,8 +171,8 @@ describe('add script files', () => {
         const config = JSON.parse(fs.readFileSync(path.resolve(projectPath, 'config.json'), 'utf8'));
 
         expect(config.webResources[0].path).toBe('./dist/scripts/Ribbon.js');
-        expect(config.webResources[0].name).toBe(answers[0]);
-        expect(config.webResources[0].displayname).toBe(answers[1]);
+        expect(config.webResources[0].name).toBe(answers[1]);
+        expect(config.webResources[0].displayname).toBe(answers[2]);
         expect(config.webResources[0].type).toBe('JavaScript');
 
         expect(fs.existsSync(path.resolve(projectPath, 'test', 'scripts', 'Ribbon.test.ts'))).toBeTruthy();
