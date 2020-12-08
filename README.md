@@ -1,3 +1,7 @@
+#DEPRECATED#
+
+Use [powerapps-tools](https://github.com/powerapps-tools) instead
+
 # d365-cli
 |Build|NPM|
 |-----|---|
